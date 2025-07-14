@@ -1,0 +1,30 @@
+{% extends 'forum/base.html' %}
+{% block content %}
+<h2>📚 Your Asked Doubts</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Status</th>
+      <th>Answer</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for doubt in doubts %}
+    <tr>
+      <td><a href="{% url 'view_doubt' doubt.id %}">{{ doubt.title }}</a></td>
+      <td>
+        {% if doubt.faculty_verified %}
+          ✅ Verified by Faculty
+        {% else %}
+          🕒 Awaiting Verification
+        {% endif %}
+      </td>
+      <td>
+        {{ doubt.ai_answer|truncatechars:80 }}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

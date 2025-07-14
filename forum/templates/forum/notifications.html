@@ -1,0 +1,16 @@
+{% extends 'forum/base.html' %}
+{% load humanize %}  {# ✅ Load humanize filters including naturaltime #}
+
+{% block content %}
+<h3>🔔 Notifications</h3>
+<ul class="list-group">
+    {% for note in notifications %}
+    <li class="list-group-item {{ note.is_read|yesno:'text-muted,text-dark' }}">
+        {{ note.message }} <br>
+        <small class="text-muted">{{ note.created_at|naturaltime }}</small>
+    </li>
+    {% empty %}
+    <li class="list-group-item">No notifications yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

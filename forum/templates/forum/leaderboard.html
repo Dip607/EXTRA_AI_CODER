@@ -1,0 +1,55 @@
+<!-- templates/forum/leaderboard.html -->
+{% extends 'forum/base.html' %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                🧑‍🎓 Top Students (by doubts asked)
+            </div>
+            <div class="card-body">
+                {% if top_students %}
+                    <ol class="list-group list-group-numbered">
+                        {% for student in top_students %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ student.username }}
+                            <span class="badge bg-success rounded-pill">
+                                {{ student.doubts_posted }} doubts
+                            </span>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                {% else %}
+                    <p>No student data available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                👨‍🏫 Top Faculty (by doubts verified)
+            </div>
+            <div class="card-body">
+                {% if top_faculty %}
+                    <ol class="list-group list-group-numbered">
+                        {% for faculty in top_faculty %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ faculty.username }}
+                            <span class="badge bg-warning rounded-pill">
+                                {{ faculty.verified_count }} verified
+                            </span>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                {% else %}
+                    <p>No faculty data available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+<!-- templates/registration/logged_out.html -->
+{% extends 'forum/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h2 class="mb-4">👋 You have been logged out.</h2>
+    <p>Thank you for using Code Forum!</p>
+
+    <div class="mt-4">
+        <a href="{% url 'login' %}" class="btn btn-primary me-2">🔐 Log in Again</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">🏠 Back to Home</a>
+    </div>
+</div>
+{% endblock %}
