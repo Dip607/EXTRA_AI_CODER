@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: code-forum
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn code_forum.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: code_forum.settings
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
