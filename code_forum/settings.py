@@ -31,7 +31,9 @@ SECRET_KEY = 'django-insecure-2u7dt4$7p2#aq*_s5ao3g6@@7s2!v-e@^4l#uub8u$+99j*b+*
 DEBUG = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 ALLOWED_HOSTS = ['.onrender.com', 'extra-ai-coder.onrender.com', 'localhost', '127.0.0.1']
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://extra-ai-coder.onrender.com',
+]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
