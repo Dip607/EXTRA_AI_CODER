@@ -1,12 +1,14 @@
-# forum/utils/ocr.py
-
 import pytesseract
 from PIL import Image
 from pdf2image import convert_from_path
+import platform
 import os
-from django.conf import settings
 
-pytesseract.pytesseract.tesseract_cmd = getattr(settings, 'TESSERACT_CMD', 'tesseract')
+# ✅ Set correct path based on OS
+if platform.system() == "Windows":
+    pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+elif platform.system() == "Linux":
+    pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Default Linux path (Render, Docker etc.)
 
 def extract_text_from_file(file_path):
     extracted_text = ""

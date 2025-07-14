@@ -2,6 +2,7 @@ services:
   - type: web
     name: code-forum
     env: python
+    dockerfilePath: ./Dockerfile
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn code_forum.wsgi:application
     envVars:
