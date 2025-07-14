@@ -20,10 +20,79 @@ from .models import Notification
 from django.contrib.auth.decorators import login_required
 
 
+# forum/views.py
+
+from .forms import OCRUploadForm, DoubtForm
+from .utils.ocr import extract_text_from_file
+from .models import OCRDoubtUpload, Doubt
+
+
 
 # ✅ Home
 def home(request):
     return render(request, 'forum/home.html')
+
+@login_required
+def ocr_doubt_upload(request):
+    if request.method == 'POST':
+        form = OCRUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            ocr_entry = form.save(commit=False)
+            ocr_entry.user = request.user
+            ocr_entry.save()
+
+            file_path = ocr_entry.image.path
+            extracted_text = extract_text_from_file(file_path)
+            ocr_entry.extracted_text = extracted_text
+            ocr_entry.save()
+
+            # Auto-create doubt from extracted text
+            title = extracted_text.strip().split('\n')[0][:100]
+            description = extracted_text.strip()
+
+            doubt = Doubt.objects.create(
+                student=request.user,
+                title=title,
+                description=description,
+                is_public=True  # Optional: make public
+            )
+
+            # 🔁 Ask AI immediately
+            prompt = f"Q: {doubt.title}\n\n{doubt.description}\n\nCode:\n{doubt.code_snippet or ''}"
+
+            try:
+                headers = {
+                    "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+                    "Content-Type": "application/json",
+                }
+
+                data = {
+                    "model": os.getenv("AI_MODEL", "mistralai/mistral-7b-instruct"),
+                    "messages": [
+                        {"role": "system", "content": "You are a helpful coding assistant."},
+                        {"role": "user", "content": prompt},
+                    ],
+                }
+
+                response = httpx.post("https://openrouter.ai/api/v1/chat/completions",
+                                      headers=headers, json=data, timeout=30)
+
+                if response.status_code == 200:
+                    doubt.ai_answer = response.json()["choices"][0]["message"]["content"]
+                else:
+                    doubt.ai_answer = f"⚠️ AI error {response.status_code}: {response.text}"
+
+            except Exception as e:
+                doubt.ai_answer = f"⚠️ AI failed:\n{str(e)}"
+
+            doubt.save()
+
+            # Redirect to answer view
+            return redirect('view_doubt', doubt_id=doubt.id)
+    else:
+        form = OCRUploadForm()
+
+    return render(request, 'forum/ocr_upload.html', {'form': form})
 
 @login_required
 def unread_notification_count(request):

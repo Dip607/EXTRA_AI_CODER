@@ -1,42 +1,31 @@
+# forum/forms.py
 
-from django.core.exceptions import ValidationError
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-
-from .models import Doubt
-from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from .models import User
+
+from .models import Doubt, User, OCRDoubtUpload
+
+# OCR Upload Form
+class OCRUploadForm(forms.ModelForm):
+    class Meta:
+        model = OCRDoubtUpload
+        fields = ['image']  # Make sure this matches your model's ImageField
+        widgets = {
+            'image': forms.ClearableFileInput(attrs={'accept': 'image/*'}),
+        }
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        valid_mime_types = ['image/jpeg', 'image/png', 'image/jpg']
+        if image.content_type not in valid_mime_types:
+            raise ValidationError("Only JPEG and PNG files are allowed.")
+        return image
 
 
-# Delay model imports using local imports to avoid circular dependency during startup
-
-User = get_user_model()
-
-# Choice fields (can also be imported from models later for DRY code)
-ROLE_CHOICES = (
-    ('student', 'Student'),
-    ('faculty', 'Faculty'),
-)
-
-DEPARTMENT_CHOICES = (
-    ('CSE', 'CSE'),
-    ('ECE', 'ECE'),
-    ('ME', 'Mechanical'),
-    ('CE', 'Civil'),
-    ('EE', 'Electrical'),
-)
-
-YEAR_CHOICES = (
-    (1, '1st Year'),
-    (2, '2nd Year'),
-    (3, '3rd Year'),
-    (4, '4th Year'),
-)
-
+# Faculty Suggestion Form
 class FacultySuggestionForm(forms.ModelForm):
     class Meta:
         model = Doubt
@@ -44,8 +33,9 @@ class FacultySuggestionForm(forms.ModelForm):
         widgets = {
             'faculty_suggestion': forms.Textarea(attrs={'rows': 5, 'class': 'form-control'}),
         }
-        
 
+
+# Custom User Signup Form
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
@@ -56,19 +46,12 @@ class CustomUserCreationForm(UserCreationForm):
         email = cleaned_data.get("email")
         role = cleaned_data.get("role")
 
-        # Faculty must use .ac.in email
         if role == "faculty" and not (email and email.endswith(".ac.in")):
-            raise forms.ValidationError("Faculty must sign up using an academic email ending in '.ac.in'.")
-
+            raise forms.ValidationError("Faculty must use a college email ending in '.ac.in'.")
         return cleaned_data
 
     def _post_clean(self):
-        """
-        Called after clean(). We override this to skip some password checks for students.
-        """
         super()._post_clean()
-
-        # Only apply strict password validation to faculty
         role = self.cleaned_data.get("role")
         password = self.cleaned_data.get("password1")
         user = self.instance
@@ -79,22 +62,17 @@ class CustomUserCreationForm(UserCreationForm):
             except ValidationError as e:
                 self.add_error('password1', e)
 
-class DoubtForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        # Import Category model locally to prevent circular import at project startup
-        from .models import Category
-        super().__init__(*args, **kwargs)
-        self.fields['categories'].queryset = Category.objects.all()
 
+# Ask Doubt Form
+class DoubtForm(forms.ModelForm):
     is_public = forms.BooleanField(required=False, initial=True, label="Make this doubt public?")
     categories = forms.ModelMultipleChoiceField(
-        queryset=None,  # Will be filled in __init__
+        queryset=None,
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
 
     class Meta:
-        from .models import Doubt  # Import locally
         model = Doubt
         fields = ['title', 'description', 'code_snippet', 'categories', 'is_public']
         widgets = {
@@ -102,9 +80,15 @@ class DoubtForm(forms.ModelForm):
             'code_snippet': forms.Textarea(attrs={'rows': 6, 'class': 'font-monospace'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        from .models import Category  # Avoid circular import
+        super().__init__(*args, **kwargs)
+        self.fields['categories'].queryset = Category.objects.all()
 
+
+# Comment Form
 class CommentForm(forms.ModelForm):
     class Meta:
-        from .models import Comment  # Local import
+        from .models import Comment
         model = Comment
         fields = ['content']

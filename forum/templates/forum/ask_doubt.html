@@ -3,25 +3,30 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="card shadow-sm">
-    <!-- Add this after code_snippet field -->
+<div class="card shadow-sm p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="card-title mb-0">📝 Ask a Coding Doubt</h2>
+        <a href="{% url 'ocr_doubt_upload' %}" class="btn btn-outline-secondary text-black">
+            📂 Upload Assignment
+        </a>
+    </div>
 
-    <div class="mb-3">
-      <label>Categories:</label><br>
-      {{ form.categories }}
-    </div>
-    <div class="mb-3">
-        {{ form.is_public.label_tag }} {{ form.is_public }}
-    </div>
-      
-  
-    <div class="card-body">
-        <h2 class="card-title mb-4">📝 Ask a Coding Doubt</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form|crispy }}
-            <button type="submit" class="btn btn-primary mt-3">Submit & Get AI Help</button>
-        </form>
-    </div>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.title|as_crispy_field }}
+        {{ form.description|as_crispy_field }}
+        {{ form.code_snippet|as_crispy_field }}
+
+        <div class="mb-3">
+            <label class="form-label">Categories:</label>
+            {{ form.categories }}
+        </div>
+
+        <div class="mb-3 form-check">
+            {{ form.is_public }} {{ form.is_public.label_tag }}
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Submit & Get AI Help</button>
+    </form>
 </div>
 {% endblock %}

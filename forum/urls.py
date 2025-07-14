@@ -24,7 +24,8 @@ urlpatterns = [
     path('leaderboard/', views.leaderboard, name='leaderboard'),
     path('notifications/unread_count/', views.unread_notification_count, name='unread_notification_count'),
     path('student/<str:username>/', views.student_profile, name='student_profile'),
-    path("faculty/<str:username>/", views.faculty_profile_by_username, name="faculty_profile_by_username")
+    path("faculty/<str:username>/", views.faculty_profile_by_username, name="faculty_profile_by_username"),
+    path('upload-doubt/', views.ocr_doubt_upload, name='ocr_doubt_upload'),
 
 
     

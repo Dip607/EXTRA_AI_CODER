@@ -1,0 +1,11 @@
+{% extends "forum/base.html" %}
+{% block content %}
+<h3>📝 Confirm Extracted Doubt</h3>
+<p><strong>Extracted:</strong></p>
+<pre>{{ ocr.extracted_text }}</pre>
+<form method="get" action="{% url 'ask_doubt' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Ask with AI Answer</button>
+</form>
+{% endblock %}

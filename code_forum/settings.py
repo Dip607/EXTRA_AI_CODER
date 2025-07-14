@@ -34,7 +34,7 @@ ALLOWED_HOSTS = ['.onrender.com', 'extra-ai-coder.onrender.com', 'localhost', '1
 CSRF_TRUSTED_ORIGINS = [
     'https://extra-ai-coder.onrender.com',
 ]
-
+TESSERACT_CMD = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 

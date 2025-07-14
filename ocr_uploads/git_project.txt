@@ -1,0 +1,216 @@
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate (main)
+$ export PATH=$PWD/node_modules/.bin:$PATH
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate (main)
+$ cd smart_roomate
+bash: cd: smart_roomate: No such file or directory
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate (main)
+$ cd smart_roommate
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git init
+Initialized empty Git repository in C:/Users/DIPAN/Desktop/roommate/smart_roommate/.git/
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git add .
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git commit -m "creation"
+[main (root-commit) faa418c] creation
+ 37 files changed, 437 insertions(+)
+ create mode 100644 core/__init__.py
+ create mode 100644 core/__pycache__/__init__.cpython-311.pyc
+ create mode 100644 core/__pycache__/admin.cpython-311.pyc
+ create mode 100644 core/__pycache__/apps.cpython-311.pyc
+ create mode 100644 core/__pycache__/forms.cpython-311.pyc
+ create mode 100644 core/__pycache__/models.cpython-311.pyc
+ create mode 100644 core/__pycache__/urls.cpython-311.pyc
+ create mode 100644 core/__pycache__/views.cpython-311.pyc
+ create mode 100644 core/admin.py
+ create mode 100644 core/apps.py
+ create mode 100644 core/forms.py
+ create mode 100644 core/migrations/0001_initial.py
+ create mode 100644 core/migrations/__init__.py
+ create mode 100644 core/migrations/__pycache__/0001_initial.cpython-311.pyc
+ create mode 100644 core/migrations/__pycache__/__init__.cpython-311.pyc
+ create mode 100644 core/models.py
+ create mode 100644 core/templates/core/base.html
+ create mode 100644 core/templates/core/edit_profile.html
+ create mode 100644 core/templates/core/home.html
+ create mode 100644 core/templates/core/login.html
+ create mode 100644 core/templates/core/matches.html
+ create mode 100644 core/templates/core/signup.html
+ create mode 100644 core/tests.py
+ create mode 100644 core/urls.py
+ create mode 100644 core/views.py
+ create mode 100644 db.sqlite3
+ create mode 100644 manage.py
+ create mode 100644 media/profile_pics/WhatsApp_Image_2025-06-30_at_8.05.30_PM_1.png
+ create mode 100644 smart_roommate/__init__.py
+ create mode 100644 smart_roommate/__pycache__/__init__.cpython-311.pyc
+ create mode 100644 smart_roommate/__pycache__/settings.cpython-311.pyc
+ create mode 100644 smart_roommate/__pycache__/urls.cpython-311.pyc
+ create mode 100644 smart_roommate/__pycache__/wsgi.cpython-311.pyc
+ create mode 100644 smart_roommate/asgi.py
+ create mode 100644 smart_roommate/settings.py
+ create mode 100644 smart_roommate/urls.py
+ create mode 100644 smart_roommate/wsgi.py
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git remote add origin https://github.com/Dip607/ROMMIEAI.git
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git push origin main
+To https://github.com/Dip607/ROMMIEAI.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/Dip607/ROMMIEAI.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git pull origin main --rebase
+git pull origin main --rebase
+remote: Enumerating objects: 26, done.
+remote: Counting objects: 100% (26/26), done.
+remote: Compressing objects: 100% (20/20), done.
+remote: Total 26 (delta 0), reused 19 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (26/26), 35.11 KiB | 198.00 KiB/s, done.
+From https://github.com/Dip607/ROMMIEAI
+ * branch            main       -> FETCH_HEAD
+ * [new branch]      main       -> origin/main
+Successfully rebased and updated refs/heads/main.
+From https://github.com/Dip607/ROMMIEAI
+ * branch            main       -> FETCH_HEAD
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git push origin main
+Enumerating objects: 48, done.
+Counting objects: 100% (48/48), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (44/44), done.
+Counting objects: 100% (48/48), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (44/44), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (44/44), done.
+Compressing objects: 100% (44/44), done.
+Writing objects: 100% (47/47), 548.63 KiB | 9.80 MiB/s, done.
+Total 47 (delta 5), reused 0 (delta 0), pack-reused 0 (from 0)
+Total 47 (delta 5), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (5/5), done.
+To https://github.com/Dip607/ROMMIEAI.git
+remote: Resolving deltas: 100% (5/5), done.
+To https://github.com/Dip607/ROMMIEAI.git
+   b8a9c2b..d2ff24d  main -> main
+To https://github.com/Dip607/ROMMIEAI.git
+   b8a9c2b..d2ff24d  main -> main
+   b8a9c2b..d2ff24d  main -> main
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git add .
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git -m commit "update map view"
+unknown option: -m
+usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]
+           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
+           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]
+           [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]
+           [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]
+           <command> [<args>]
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git commit -m "add map view"
+[main a5fc5b1] add map view
+ 32 files changed, 452 insertions(+), 21 deletions(-)
+ create mode 100644 core/__pycache__/utils.cpython-311.pyc
+ create mode 100644 core/migrations/0002_message.py
+ create mode 100644 core/migrations/0003_profile_latitude_profile_longitude.py
+ create mode 100644 core/migrations/__pycache__/0002_message.cpython-311.pyc
+ create mode 100644 core/migrations/__pycache__/0003_profile_latitude_profile_longitude.cpython-311.pyc
+ create mode 100644 core/templates/core/all_users.html
+ create mode 100644 core/templates/core/chat.html
+ create mode 100644 core/utils.py
+ create mode 100644 media/profile_pics/WhatsApp_Image_2025-06-30_at_8_8LpjSyy.05.30_PM_1.png
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git remote add origin https://github.com/Dip607/ROMMIEAI.git
+error: remote origin already exists.
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git push origin main
+Enumerating objects: 65, done.
+Counting objects: 100% (65/65), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (41/41), done.
+Writing objects: 100% (43/43), 26.68 KiB | 827.00 KiB/s, done.
+Total 43 (delta 8), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (8/8), completed with 6 local objects.
+remote: Resolving deltas: 100% (8/8), completed with 6 local objects.
+To https://github.com/Dip607/ROMMIEAI.git
+   d2ff24d..a5fc5b1  main -> main
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
+bash: https://unpkg.com/leaflet@1.9.4/dist/leaflet.js: No such file or directory
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$
+
+
+
+$ https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
+bash: https://unpkg.com/leaflet@1.9.4/dist/leaflet.js: No such file or directory
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$
+$ https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
+bash: https://unpkg.com/leaflet@1.9.4/dist/leaflet.js: No such file or directory
+
+$ https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
+bash: https://unpkg.com/leaflet@1.9.4/dist/leaflet.js: No such file or directory
+$ https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
+bash: https://unpkg.com/leaflet@1.9.4/dist/leaflet.js: No such file or directory
+
+$ https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
+bash: https://unpkg.com/leaflet@1.9.4/dist/leaflet.js: No such file or directory
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$
+$ https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
+bash: https://unpkg.com/leaflet@1.9.4/dist/leaflet.js: No such file or directory
+
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git init
+Reinitialized existing Git repository in C:/Users/DIPAN/Desktop/roommate/smart_roommate/.git/
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git add .
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git commit -m "upadate map"
+[main b5c564e] upadate map
+ 21 files changed, 244 insertions(+), 68 deletions(-)
+ create mode 100644 core/middleware/update_last_seen.py
+ create mode 100644 core/migrations/0004_profile_college_id_profile_is_verified_and_more.py
+ create mode 100644 core/migrations/__pycache__/0004_profile_college_id_profile_is_verified_and_more.cpython-311.pyc
+ create mode 100644 core/templates/core/profile_detail.html
+ create mode 100644 core/templatetags/__init__.py
+ create mode 100644 core/templatetags/__pycache__/__init__.cpython-311.pyc
+ create mode 100644 core/templatetags/__pycache__/custom_tags.cpython-311.pyc
+ create mode 100644 core/templatetags/custom_tags.py
+ create mode 100644 media/profile_pics/Screenshot_2025-07-09_191226.png
+
+DIPAN@LAPTOP-3MOUFU79 MINGW64 ~/Desktop/roommate/smart_roommate (main)
+$ git remote add origin https://github.com/Dip607/ROMMIEAI.git
+error: remote origin already exists.
+
+nvrt tpws ffka gtlh
