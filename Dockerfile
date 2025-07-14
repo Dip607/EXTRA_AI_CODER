@@ -1,26 +1,26 @@
-# Use official Python image
+# Use slim python image
 FROM python:3.11-slim
 
-# Install system dependencies
+# Install required system dependencies including Tesseract
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     poppler-utils \
     libgl1 \
-    build-essential \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy project files
+# Copy code
 COPY . /app
 
-# Upgrade pip and install Python dependencies
+# Install Python dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Expose port
 EXPOSE 8000
 
-# Start the app using Gunicorn (customize if needed)
+# Run Django using Gunicorn
 CMD ["gunicorn", "code_forum.wsgi:application", "--bind", "0.0.0.0:8000"]
