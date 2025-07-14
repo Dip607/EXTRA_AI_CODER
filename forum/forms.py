@@ -1,8 +1,15 @@
+
+from django.core.exceptions import ValidationError
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
 from .models import Doubt
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from .models import User
 
 
 # Delay model imports using local imports to avoid circular dependency during startup
@@ -38,26 +45,39 @@ class FacultySuggestionForm(forms.ModelForm):
             'faculty_suggestion': forms.Textarea(attrs={'rows': 5, 'class': 'form-control'}),
         }
         
-class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    role = forms.ChoiceField(choices=ROLE_CHOICES)
-    department = forms.ChoiceField(choices=DEPARTMENT_CHOICES)
-    year = forms.ChoiceField(choices=YEAR_CHOICES, required=False)
-    github_url = forms.URLField(required=False)
 
+class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = [
-            'username',
-            'email',
-            'password1',
-            'password2',
-            'role',
-            'department',
-            'year',
-            'github_url',
-        ]
+        fields = ('username', 'email', 'role', 'department', 'year', 'github_url', 'password1', 'password2')
 
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get("email")
+        role = cleaned_data.get("role")
+
+        # Faculty must use .ac.in email
+        if role == "faculty" and not (email and email.endswith(".ac.in")):
+            raise forms.ValidationError("Faculty must sign up using an academic email ending in '.ac.in'.")
+
+        return cleaned_data
+
+    def _post_clean(self):
+        """
+        Called after clean(). We override this to skip some password checks for students.
+        """
+        super()._post_clean()
+
+        # Only apply strict password validation to faculty
+        role = self.cleaned_data.get("role")
+        password = self.cleaned_data.get("password1")
+        user = self.instance
+
+        if role == "faculty":
+            try:
+                validate_password(password, user)
+            except ValidationError as e:
+                self.add_error('password1', e)
 
 class DoubtForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

@@ -33,7 +33,7 @@ class User(AbstractUser):
     department = models.CharField(max_length=20, choices=DEPARTMENT_CHOICES)
     year = models.PositiveSmallIntegerField(choices=YEAR_CHOICES, null=True, blank=True)
     github_url = models.URLField(blank=True, null=True)
-
+    is_verified_faculty = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.username} ({self.role})"
 

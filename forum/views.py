@@ -60,6 +60,9 @@ def signup_view(request):
             user.department = form.cleaned_data['department']
             user.year = form.cleaned_data['year']
             user.github_url = form.cleaned_data['github_url']
+            if user.role == 'faculty' and user.email.endswith('@mnnit.ac.in'):
+                    user.is_verified_faculty = True
+                    
             user.save()
             login(request, user)
             return redirect('dashboard')
@@ -187,11 +190,28 @@ def view_doubt(request, doubt_id):
         'comments': comments,
         'form': form
     })
+@login_required
+def faculty_profile_by_username(request, username):
+    faculty = get_object_or_404(User, username=username, role='faculty')
+    doubts = Doubt.objects.filter(verified_by=faculty)
+    return render(request, 'forum/faculty_profile.html', {
+        'faculty': faculty,
+        'verified_doubts': doubts
+    })
 
+
+@login_required
+def student_profile(request, username):
+    student = get_object_or_404(User, username=username, role='student')
+    doubts = Doubt.objects.filter(student=student).order_by('-created_at')
+    return render(request, 'forum/student_profile.html', {
+        'student': student,
+        'doubts': doubts,
+    })
 
 # ✅ Faculty Verifies Doubt
 
-@user_passes_test(lambda u: u.is_authenticated and u.role == 'faculty')
+@user_passes_test(lambda u: u.is_authenticated and u.role == 'faculty' and u.is_verified_faculty)
 @require_http_methods(["GET", "POST"])
 def verify_doubt(request, doubt_id):
     doubt = get_object_or_404(Doubt, id=doubt_id)

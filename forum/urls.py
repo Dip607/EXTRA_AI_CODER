@@ -23,5 +23,9 @@ urlpatterns = [
     path('notifications/', views.notifications_view, name='notifications'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
     path('notifications/unread_count/', views.unread_notification_count, name='unread_notification_count'),
+    path('student/<str:username>/', views.student_profile, name='student_profile'),
+    path("faculty/<str:username>/", views.faculty_profile_by_username, name="faculty_profile_by_username")
+
+
     
 ]

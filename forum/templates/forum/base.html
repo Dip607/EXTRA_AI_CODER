@@ -22,6 +22,9 @@
             {% if user.role == "student" %}
                 <a href="{% url 'student_dashboard' %}" class="btn btn-outline-light">Dashboard</a>
                 <a href="{% url 'ask_doubt' %}" class="btn btn-outline-info">Ask Doubt</a>
+                <a href="{% url 'student_profile' user.username %}" class="btn btn-outline-secondary">
+                    👤 {{ user.username }}
+                </a>
                 <a href="{% url 'notifications' %}" class="btn btn-outline-warning position-relative">
                     🔔 Notifications
                     <span id="notif-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
@@ -30,9 +33,11 @@
                 </a>
             {% elif user.role == "faculty" %}
                 <a href="{% url 'faculty_dashboard' %}" class="btn btn-outline-light">Dashboard</a>
+                <a href="{% url 'faculty_profile_by_username' user.username %}" class="btn btn-outline-secondary">
+                    👤 {{ user.username }}
+                </a>
             {% endif %}
             <a href="{% url 'leaderboard' %}" class="btn btn-outline-warning">Leaderboard</a>
-
             <form method="POST" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-outline-danger">Logout</button>

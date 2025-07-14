@@ -1,0 +1,17 @@
+{% extends 'forum/base.html' %}
+{% block content %}
+<h2>{{ student.username }}'s Profile</h2>
+<p>Department: {{ student.department }}</p>
+<p>Year: {{ student.year }}</p>
+<p>GitHub: <a href="{{ student.github_url }}">{{ student.github_url }}</a></p>
+
+<h4 class="mt-4">Doubt History</h4>
+<ul class="list-group">
+  {% for doubt in doubts %}
+    <li class="list-group-item">
+      <a href="{% url 'view_doubt' doubt.id %}">{{ doubt.title }}</a>
+      {% if doubt.faculty_verified %}<span class="badge bg-success ms-2">Verified</span>{% endif %}
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
