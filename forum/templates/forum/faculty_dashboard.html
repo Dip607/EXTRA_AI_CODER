@@ -1,28 +1,969 @@
 {% extends 'forum/base.html' %}
 {% block content %}
-<h2>🧠 All Student Doubts</h2>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Student</th>
-      <th>Title</th>
-      <th>Verified</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for doubt in doubts %}
-    <tr>
-      <td>{{ doubt.student.username }}</td>
-      <td><a href="{% url 'view_doubt' doubt.id %}">{{ doubt.title }}</a></td>
-      <td>{% if doubt.faculty_verified %}✅{% else %}❌{% endif %}</td>
-      <td>
-        {% if not doubt.faculty_verified %}
-        <a class="btn btn-sm btn-success" href="{% url 'verify_doubt' doubt.id %}">Verify</a>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+
+
+<div class="dashboard-container fade-in">
+    <div class="dashboard-wrapper">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header glass-card">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="dashboard-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="header-text">
+                        <h2 class="dashboard-title">🧠 All Student Doubts</h2>
+                        <p class="dashboard-subtitle">Monitor and verify student questions across all subjects</p>
+                    </div>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ doubts|length }}</div>
+                        <div class="stat-label">Total Doubts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">
+                            {% for doubt in doubts %}
+                                {% if doubt.faculty_verified %}{{ forloop.counter }}{% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="stat-label">Verified</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doubts Grid -->
+        <div class="doubts-grid">
+            {% for doubt in doubts %}
+                <div class="doubt-card glass-card slide-in">
+                    <div class="doubt-card-header">
+                        <div class="student-info">
+                            <div class="student-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="student-details">
+                                <h4 class="student-name">{{ doubt.student.username }}</h4>
+                                <span class="student-label">Student</span>
+                            </div>
+                        </div>
+                        <div class="doubt-status">
+                            {% if doubt.faculty_verified %}
+                                <div class="status-badge verified">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>✅ Verified</span>
+                                </div>
+                            {% else %}
+                                <div class="status-badge pending">
+                                    <i class="fas fa-clock"></i>
+                                    <span>❌ Pending</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="doubt-card-content">
+                        <h3 class="doubt-card-title">
+                            <a href="{% url 'view_doubt' doubt.id %}" class="doubt-link">
+                                {{ doubt.title }}
+                            </a>
+                        </h3>
+                        
+                        <div class="doubt-preview">
+                            <div class="preview-header">
+                                <i class="fas fa-eye"></i>
+                                <span>Question Preview</span>
+                            </div>
+                            <div class="preview-content">
+                                Click to view the complete question and provide assistance...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="doubt-card-footer">
+                        <div class="doubt-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Recently Asked</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-comments"></i>
+                                <span>View Details</span>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <a href="{% url 'view_doubt' doubt.id %}" class="modern-btn btn-secondary view-btn">
+                                <i class="fas fa-eye"></i>
+                                <span>View</span>
+                            </a>
+                            {% if not doubt.faculty_verified %}
+                                <a href="{% url 'verify_doubt' doubt.id %}" class="modern-btn btn-success verify-btn">
+                                    <i class="fas fa-check"></i>
+                                    <span>Verify</span>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state glass-card">
+                    <div class="empty-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3 class="empty-title">No Student Doubts Yet</h3>
+                    <p class="empty-description">Students haven't asked any questions yet. Encourage them to start their learning journey!</p>
+                    <a href="#" class="modern-btn btn-primary empty-cta">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Encourage Students</span>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions glass-card">
+            <div class="actions-header">
+                <i class="fas fa-bolt"></i>
+                <span>Faculty Actions</span>
+            </div>
+            <div class="actions-grid">
+                <a href="#" class="action-item">
+                    <div class="action-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="action-content">
+                        <h4 class="action-title">View Analytics</h4>
+                        <p class="action-description">Monitor student engagement and doubt patterns</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="action-item">
+                    <div class="action-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="action-content">
+                        <h4 class="action-title">Student Management</h4>
+                        <p class="action-description">Manage student accounts and permissions</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="action-item">
+                    <div class="action-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="action-content">
+                        <h4 class="action-title">Settings</h4>
+                        <p class="action-description">Configure forum settings and preferences</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Elements -->
+    <div class="dashboard-background-elements">
+        <div class="floating-element element-1">
+            <i class="fas fa-code"></i>
+        </div>
+        <div class="floating-element element-2">
+            <i class="fas fa-lightbulb"></i>
+        </div>
+        <div class="floating-element element-3">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="floating-element element-4">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="floating-element element-5">
+            <i class="fas fa-brain"></i>
+        </div>
+        <div class="floating-element element-6">
+            <i class="fas fa-rocket"></i>
+        </div>
+    </div>
+</div>
+
+
+<style>
+/* Global Styles */
+body {
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%);
+    min-height: 100vh;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #333333 0%, #555555 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.brand-icon i {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.brand-text {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+
+
+
+/* Dashboard Container */
+.dashboard-container {
+    min-height: calc(100vh - 200px);
+    padding: 120px 20px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 24px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.dashboard-header:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.dashboard-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #333333 0%, #555555 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.dashboard-icon i {
+    font-size: 1.8rem;
+    color: white;
+}
+
+.dashboard-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.dashboard-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.header-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-item {
+    text-align: center;
+    background: rgba(30, 30, 30, 0.6);
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(80, 80, 80, 0.3);
+    min-width: 120px;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Doubts Grid */
+.doubts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.doubt-card {
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.doubt-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    background: rgba(25, 25, 25, 0.9);
+}
+
+.doubt-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-avatar {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #444444 0%, #666666 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.student-avatar i {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.student-name {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.student-label {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+}
+
+.doubt-status {
+    flex-shrink: 0;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-badge.verified {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status-badge.pending {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.doubt-card-content {
+    margin-bottom: 20px;
+}
+
+.doubt-card-title {
+    margin-bottom: 15px;
+}
+
+.doubt-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: block;
+    line-height: 1.4;
+}
+
+.doubt-link:hover {
+    color: #cccccc;
+    text-decoration: none;
+    transform: translateX(5px);
+}
+
+.doubt-preview {
+    background: rgba(25, 25, 25, 0.6);
+    border: 1px solid rgba(80, 80, 80, 0.3);
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.preview-header i {
+    color: #6b7280;
+}
+
+.preview-content {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.doubt-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid rgba(80, 80, 80, 0.3);
+    gap: 15px;
+}
+
+.doubt-meta {
+    display: flex;
+    gap: 15px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+}
+
+.meta-item i {
+    color: #888888;
+    font-size: 0.8rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.view-btn, .verify-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+/* Empty State */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 40px;
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 24px;
+}
+
+.empty-icon {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #333333 0%, #555555 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+.empty-icon i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.empty-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.empty-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.empty-cta {
+    padding: 16px 32px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Quick Actions */
+.quick-actions {
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+}
+
+.actions-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.3);
+}
+
+.actions-header i {
+    color: #fbbf24;
+    font-size: 1.1rem;
+}
+
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.action-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(25, 25, 25, 0.6);
+    border: 1px solid rgba(80, 80, 80, 0.3);
+    border-radius: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.action-item:hover {
+    background: rgba(35, 35, 35, 0.8);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-decoration: none;
+}
+
+.action-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #333333 0%, #555555 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.action-icon i {
+    font-size: 1.2rem;
+    color: white;
+}
+
+.action-title {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.action-description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Modern Button */
+.modern-btn {
+    padding: 10px 16px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.modern-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.modern-btn:hover::before {
+    left: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #333333 0%, #555555 100%);
+    color: white;
+    border: 1px solid rgba(100, 100, 100, 0.5);
+}
+
+.btn-secondary {
+    background: rgba(55, 65, 81, 0.8);
+    color: white;
+    border: 1px solid rgba(75, 85, 99, 0.5);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+    border: 1px solid rgba(34, 197, 94, 0.5);
+}
+
+.btn-primary:hover, .btn-secondary:hover, .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    color: white;
+    text-decoration: none;
+}
+
+
+
+
+/* Floating Background Elements */
+.dashboard-background-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.floating-element {
+    position: absolute;
+    color: rgba(100, 100, 100, 0.08);
+    font-size: 3rem;
+    animation: float 6s ease-in-out infinite;
+}
+
+.element-1 {
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.element-2 {
+    top: 20%;
+    right: 10%;
+    animation-delay: 1s;
+}
+
+.element-3 {
+    bottom: 30%;
+    left: 8%;
+    animation-delay: 2s;
+}
+
+.element-4 {
+    bottom: 15%;
+    right: 5%;
+    animation-delay: 3s;
+}
+
+.element-5 {
+    top: 50%;
+    left: 3%;
+    animation-delay: 4s;
+}
+
+.element-6 {
+    top: 60%;
+    right: 8%;
+    animation-delay: 5s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    
+    
+    .dashboard-container {
+        padding: 100px 15px 20px;
+    }
+    
+    .dashboard-header {
+        padding: 30px 25px;
+        border-radius: 20px;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .dashboard-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .dashboard-icon i {
+        font-size: 1.5rem;
+    }
+    
+    .dashboard-title {
+        font-size: 1.8rem;
+    }
+    
+    .doubts-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .doubt-card {
+        padding: 20px;
+    }
+    
+    .doubt-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .doubt-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .action-buttons {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .view-btn, .verify-btn {
+        flex: 1;
+        justify-content: center;
+    }
+    
+    .quick-actions {
+        padding: 25px 20px;
+    }
+    
+    .actions-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    
+}
+
+@media (max-width: 480px) {
+    .dashboard-header,
+    .doubt-card,
+    .quick-actions {
+        padding: 20px 15px;
+        margin: 10px;
+    }
+    
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+    
+    .empty-state {
+        padding: 40px 20px;
+    }
+    
+    .empty-icon {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .empty-icon i {
+        font-size: 2rem;
+    }
+    
+    .empty-title {
+        font-size: 1.5rem;
+    }
+    
+    .stat-item {
+        min-width: 100px;
+        padding: 15px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.6s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Glass Card Effect */
+.glass-card {
+    position: relative;
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(30, 30, 30, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(120, 120, 120, 0.7);
+}
+</style>
+
 {% endblock %}

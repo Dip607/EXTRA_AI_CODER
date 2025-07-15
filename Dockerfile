@@ -2,26 +2,30 @@
 
 FROM python:3.11-slim
 
-# Install system dependencies including tesseract
+# Prevent prompts during install
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Tesseract and dependencies
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     poppler-utils \
-    libgl1 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Set work directory
+# Set working directory
 WORKDIR /app
 
 # Copy project files
 COPY . .
 
 # Install Python dependencies
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Expose port (optional for dev)
-EXPOSE 8000
+# Collect static (optional)
+RUN python manage.py collectstatic --noinput
 
-# Run migrations and start server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Run the server
+CMD ["gunicorn", "code_forum.wsgi:application", "--bind", "0.0.0.0:8000"]

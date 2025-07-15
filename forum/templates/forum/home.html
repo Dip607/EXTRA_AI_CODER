@@ -1,7 +1,12 @@
 {% extends 'forum/base.html' %}
+
+
 {% block content %}
+
 <!-- Hero Section -->
-<div class="hero-section fade-in">
+<div data-scroll-container>
+ 
+ <div class="hero-section fade-in">
     <div class="hero-content">
         <h1 class="hero-title"> 👋 Welcome to the Code Doubt Forum</h1>
         <p class="hero-subtitle">This is a private AI-powered doubt solving platform for college students.</p>
@@ -19,10 +24,11 @@
             {% endif %}
         </div>
     </div>
-</div>
+ </div>
+
 
 <!-- Features Section -->
-<div class="features-section">
+ <div class="features-section">
     <div class="section-header">
         <h2 class="section-title">
             <i class="fas fa-star"></i>
@@ -80,10 +86,10 @@
             <p class="feature-description">Your code and questions are kept private and secure within your college community.</p>
         </div>
     </div>
-</div>
+ </div>
 
 <!-- Stats Section -->
-<div class="stats-section">
+ <div class="stats-section">
     <div class="section-header">
         <h2 class="section-title">
             <i class="fas fa-chart-line"></i>
@@ -125,10 +131,10 @@
             <div class="stat-label">Avg Response Time</div>
         </div>
     </div>
-</div>
+ </div>
 
 <!-- How It Works Section -->
-<div class="how-it-works-section">
+ <div class="how-it-works-section">
     <div class="section-header">
         <h2 class="section-title">
             <i class="fas fa-cogs"></i>
@@ -194,10 +200,10 @@
             </div>
         </div>
     </div>
-</div>
+ </div>
 
 <!-- Popular Topics Section -->
-<div class="topics-section">
+ <div class="topics-section">
     <div class="section-header">
         <h2 class="section-title">
             <i class="fas fa-tags"></i>
@@ -240,10 +246,10 @@
             <span>Backend</span>
         </div>
     </div>
-</div>
+ </div>
 
 <!-- CTA Section -->
-<div class="cta-section">
+ <div class="cta-section">
     <div class="cta-content">
         <h2 class="cta-title">Ready to Solve Your Coding Doubts?</h2>
         <p class="cta-subtitle">Join thousands of students who are already getting help with their programming challenges.</p>
@@ -270,18 +276,34 @@
             {% endif %}
         </div>
     </div>
+ </div>
 </div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
 
+<!-- Locomotive Scroll JS -->
+<script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
 <style>
 /* Hero Section */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Locomotive Scroll Overrides */
+[data-scroll-container] {
+    overflow: hidden;
+}
 .hero-section {
-    background: rgba(15, 15, 15, 0.95);
+    background: linear-gradient(135deg, 
+        rgba(15, 15, 15, 0.95) 0%, 
+        rgba(30, 58, 138, 0.1) 50%, 
+        rgba(15, 15, 15, 0.95) 100%);
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
     border: 1px solid rgba(80, 80, 80, 0.3);
     border-radius: 24px;
     padding: 80px 40px;
     text-align: center;
+    
     margin-bottom: 60px;
     position: relative;
     overflow: hidden;
