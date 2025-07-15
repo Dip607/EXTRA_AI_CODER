@@ -1,5 +1,11 @@
 {
     "version": 2,
+    "builds": [
+      {
+        "src": "extra-ai-coder/wsgi.py",
+        "use": "@vercel/python"
+      }
+    ],
     "routes": [
       {
         "src": "/static/(.*)",
@@ -7,7 +13,7 @@
       },
       {
         "src": "/(.*)",
-        "dest": "EXTRA_AI_CODER/wsgi.py"
+        "dest": "extra-ai-coder/wsgi.py"
       }
     ]
   }
