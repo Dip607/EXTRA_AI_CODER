@@ -3,7 +3,6 @@
 
 <div class="leaderboard-container fade-in">
     <div class="leaderboard-wrapper">
-        <!-- Leaderboard Header -->
         <div class="leaderboard-header glass-card">
             <div class="header-content">
                 <div class="header-left">
@@ -29,9 +28,7 @@
             </div>
         </div>
 
-        <!-- Leaderboard Grid -->
         <div class="leaderboard-grid">
-            <!-- Top Students Section -->
             <div class="leaderboard-section glass-card">
                 <div class="section-header">
                     <div class="section-icon student">
@@ -85,7 +82,6 @@
                 </div>
             </div>
 
-            <!-- Top Faculty Section -->
             <div class="leaderboard-section glass-card">
                 <div class="section-header">
                     <div class="section-icon faculty">
@@ -140,14 +136,13 @@
             </div>
         </div>
 
-        <!-- Achievement Highlights -->
         <div class="achievements-section glass-card">
             <div class="achievements-header">
                 <i class="fas fa-star"></i>
                 <span>Achievement Highlights</span>
             </div>
             <div class="achievements-grid">
-                <div class="achievement-item">
+                <div class="achievement-item disabled">
                     <div class="achievement-icon">
                         <i class="fas fa-fire"></i>
                     </div>
@@ -157,7 +152,7 @@
                     </div>
                 </div>
                 
-                <div class="achievement-item">
+                <div class="achievement-item disabled">
                     <div class="achievement-icon">
                         <i class="fas fa-heart"></i>
                     </div>
@@ -167,7 +162,7 @@
                     </div>
                 </div>
                 
-                <div class="achievement-item">
+                <div class="achievement-item disabled">
                     <div class="achievement-icon">
                         <i class="fas fa-rocket"></i>
                     </div>
@@ -180,7 +175,6 @@
         </div>
     </div>
 
-    <!-- Background Elements -->
     <div class="leaderboard-background-elements">
         <div class="floating-element element-1">
             <i class="fas fa-trophy"></i>
@@ -610,12 +604,41 @@
     border-radius: 16px;
     padding: 20px;
     transition: all 0.3s ease;
+    position: relative; /* Required for badge positioning */
+    overflow: hidden; /* Recommended for clean look */
 }
 
 .achievement-item:hover {
     background: rgba(35, 35, 35, 0.8);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+/* NEW STYLES for "Coming Soon" achievement items */
+.achievement-item.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none; /* Disables click events */
+}
+
+.achievement-item.disabled:hover {
+    transform: none;
+    box-shadow: none;
+    background: rgba(25, 25, 25, 0.6);
+}
+
+.achievement-item.disabled::after {
+    content: 'Coming Soon';
+    position: absolute;
+    top: 8px;
+    right: -30px;
+    background-color: #3b82f6; /* Blue badge color */
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 30px;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .achievement-icon {

@@ -16,9 +16,10 @@
                     </div>
                 </div>
                 <div class="header-right">
-                    <a href="{% url 'ocr_doubt_upload' %}" class="modern-btn btn-outline upload-btn">
+                    <a class="modern-btn btn-outline upload-btn disabled">
                         <i class="fas fa-upload"></i>
                         <span>Upload Assignment</span>
+                        <span class="coming-soon-badge">Coming Soon</span>
                     </a>
                 </div>
             </div>
@@ -225,6 +226,28 @@
 
 .upload-btn {
     white-space: nowrap;
+    position: relative; /* Needed for the badge */
+}
+
+/* NEW STYLES for the "Coming Soon" button */
+.upload-btn.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none; /* Disables click events */
+}
+
+.coming-soon-badge {
+    position: absolute;
+    top: -10px;
+    right: -15px;
+    background-color: #ffd700;
+    color: #333;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 4px;
+    transform: rotate(15deg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 /* Form Sections */

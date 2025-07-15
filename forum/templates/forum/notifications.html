@@ -4,7 +4,6 @@
 {% block content %}
 <div class="notifications-container fade-in">
     <div class="notifications-wrapper">
-        <!-- Notifications Header -->
         <div class="notifications-header glass-card">
             <div class="header-content">
                 <div class="header-left">
@@ -33,7 +32,6 @@
             </div>
         </div>
 
-        <!-- Notifications List -->
         <div class="notifications-list">
             {% for note in notifications %}
                 <div class="notification-card glass-card slide-in {{ note.is_read|yesno:'read,unread' }}">
@@ -92,14 +90,13 @@
             {% endfor %}
         </div>
 
-        <!-- Quick Actions -->
         <div class="quick-actions glass-card">
             <div class="actions-header">
                 <i class="fas fa-bolt"></i>
                 <span>Notification Settings</span>
             </div>
             <div class="actions-grid">
-                <div class="action-item">
+                <div class="action-item disabled">
                     <div class="action-icon">
                         <i class="fas fa-check-double"></i>
                     </div>
@@ -109,7 +106,7 @@
                     </div>
                 </div>
                 
-                <div class="action-item">
+                <div class="action-item disabled">
                     <div class="action-icon">
                         <i class="fas fa-cog"></i>
                     </div>
@@ -119,7 +116,7 @@
                     </div>
                 </div>
                 
-                <div class="action-item">
+                <div class="action-item disabled">
                     <div class="action-icon">
                         <i class="fas fa-trash-alt"></i>
                     </div>
@@ -132,7 +129,6 @@
         </div>
     </div>
 
-    <!-- Background Elements -->
     <div class="notifications-background-elements">
         <div class="floating-element element-1">
             <i class="fas fa-bell"></i>
@@ -502,12 +498,41 @@ body {
     border-radius: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
+    position: relative; /* Required for badge positioning */
+    overflow: hidden; /* Recommended for clean look */
 }
 
 .action-item:hover {
     background: rgba(35, 35, 35, 0.8);
     transform: translateY(-3px);
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* NEW STYLES for the "Coming Soon" action items */
+.action-item.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none; /* Disables click events */
+}
+
+.action-item.disabled:hover {
+    transform: none;
+    box-shadow: none;
+    background: rgba(25, 25, 25, 0.6);
+}
+
+.action-item.disabled::after {
+    content: 'Coming Soon';
+    position: absolute;
+    top: 8px;
+    right: -30px;
+    background-color: #ffd700;
+    color: #333;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 30px;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .action-icon {

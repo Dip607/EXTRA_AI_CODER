@@ -5,7 +5,7 @@ services:
     plan: free
     dockerfilePath: ./Dockerfile
     buildCommand: pip install -r requirements.txt
-    startCommand: ./start.sh
+    startCommand: gunicorn your_project_name.wsgi --workers $WEB_CONCURRENCY
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: code_forum.settings
