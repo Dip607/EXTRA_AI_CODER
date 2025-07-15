@@ -2,9 +2,10 @@ services:
   - type: web
     name: code-forum
     env: python
+    plan: free
     dockerfilePath: ./Dockerfile
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn code_forum.wsgi:application
+    startCommand: ./start.sh
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: code_forum.settings
@@ -12,3 +13,5 @@ services:
         generateValue: true
       - key: DEBUG
         value: false
+        key: ALLOWED_HOSTS
+        value: extra-ai-coder.onrender.com  
