@@ -2,7 +2,7 @@
     "version": 2,
     "builds": [
       {
-        "src": "extra-ai-coder/wsgi.py",
+        "src": "EXTRA_AI_CODER/wsgi.py",
         "use": "@vercel/python"
       }
     ],
@@ -13,7 +13,7 @@
       },
       {
         "src": "/(.*)",
-        "dest": "extra-ai-coder/wsgi.py"
+        "dest": "EXTRA_AI_CODER/wsgi.py"
       }
     ]
   }
