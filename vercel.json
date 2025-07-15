@@ -1,18 +1,12 @@
 {
-    "version": 2,
-    "routes": [
+    "builds": [
       {
-        "src": "/static/(.*)",
-        "dest": "static/$1"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "manage.py"
-      },
-      {
-        "src": "Dockerfile",
-        "use": "@vercel/docker"
+        "src": "your_project_name/wsgi.py",
+        "use": "@vercel/python"
       }
+    ],
+    "routes": [
+      { "src": "/static/(.*)", "dest": "/static/$1" },
+      { "src": "/(.*)", "use": "@vercel/python", "dest": "your_project_name/wsgi.py" }
     ]
   }
-  
