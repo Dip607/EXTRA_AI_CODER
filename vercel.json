@@ -8,6 +8,10 @@
       {
         "src": "/(.*)",
         "dest": "manage.py"
+      },
+      {
+        "src": "Dockerfile",
+        "use": "@vercel/docker"
       }
     ]
   }
