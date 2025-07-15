@@ -123,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://your-render-redis-url:6379", # Get this from your Render Redis page
+        "LOCATION": "https://extra-ai-coder.onrender.com", # Get this from your Render Redis page
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
