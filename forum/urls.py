@@ -6,6 +6,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from .views import signup_view
 from django.contrib.auth.views import LogoutView
+from .views import browse_public_doubts
 
 urlpatterns = [
     path('', views.home, name='home'), 
@@ -26,6 +27,7 @@ urlpatterns = [
     path('student/<str:username>/', views.student_profile, name='student_profile'),
     path("faculty/<str:username>/", views.faculty_profile_by_username, name="faculty_profile_by_username"),
     path('upload-doubt/', views.ocr_doubt_upload, name='ocr_doubt_upload'),
+    path('browse/', browse_public_doubts, name='browse_doubts'),
 
 
     

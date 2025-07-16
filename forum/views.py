@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Count, Q
+
 import os
 import httpx
 from .models import Notification
@@ -172,6 +173,11 @@ def leaderboard(request):
         'top_faculty': top_faculty,
     })
 
+@login_required
+@user_passes_test(lambda u: u.role == 'student')
+def browse_public_doubts(request):
+    public_doubts = Doubt.objects.filter(is_public=True).exclude(student=request.user).order_by('-created_at')
+    return render(request, 'forum/public_doubts.html', {'doubts': public_doubts})
 
 # ✅ Ask Doubt (Free AI + Tag + Visibility)
 @login_required
@@ -182,6 +188,10 @@ def ask_doubt(request):
             doubt = form.save(commit=False)
             doubt.student = request.user
 
+            # ✅ FIX: Save visibility setting from form
+            doubt.is_public = form.cleaned_data['is_public']
+
+            # ✅ AI prompt
             prompt = f"Q: {doubt.title}\n\n{doubt.description}\n\nCode:\n{doubt.code_snippet or ''}"
 
             try:
@@ -210,12 +220,11 @@ def ask_doubt(request):
                 doubt.ai_answer = f"⚠️ AI failed:\n{str(e)}"
 
             doubt.save()
-            form.save_m2m()  # Save ManyToMany (tags/categories)
+            form.save_m2m()
             return redirect('view_doubt', doubt_id=doubt.id)
     else:
         form = DoubtForm()
     return render(request, 'forum/ask_doubt.html', {'form': form})
-
 
 
 @login_required

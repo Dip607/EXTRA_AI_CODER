@@ -396,6 +396,7 @@
             <div class="navbar-actions" id="navbarActions">
                 {% if user.is_authenticated %}
                     {% if user.role == "student" %}
+                        <a class="modern-btn btn-outline" href="{% url 'browse_doubts' %}"><i class="fas fa-globe"></i> Browse Doubts</a>
                         <a href="{% url 'student_dashboard' %}" class="modern-btn btn-outline">
                             <i class="fas fa-tachometer-alt"></i>
                             <span>Dashboard</span>
