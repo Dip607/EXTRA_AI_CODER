@@ -1,8 +1,7 @@
 {% extends 'forum/base.html' %}
-{% load static %}
 {% load humanize %}
-{% block content %}
 
+{% block content %}
 <div class="browse-doubts-container fade-in">
     <div class="browse-doubts-wrapper">
         <!-- Browse Header -->
@@ -273,6 +272,7 @@
     justify-content: space-between;
     align-items: flex-start;
     gap: 15px;
+    flex-wrap: wrap; /* MODIFIED: Allow items to wrap */
 }
 
 .author-info {
@@ -514,57 +514,20 @@
     animation: float 6s ease-in-out infinite;
 }
 
-.element-1 {
-    top: 10%;
-    left: 5%;
-    animation-delay: 0s;
-}
-
-.element-2 {
-    top: 20%;
-    right: 10%;
-    animation-delay: 1s;
-}
-
-.element-3 {
-    bottom: 30%;
-    left: 8%;
-    animation-delay: 2s;
-}
-
-.element-4 {
-    bottom: 15%;
-    right: 5%;
-    animation-delay: 3s;
-}
-
-.element-5 {
-    top: 50%;
-    left: 3%;
-    animation-delay: 4s;
-}
-
-.element-6 {
-    top: 60%;
-    right: 8%;
-    animation-delay: 5s;
-}
+.element-1 { top: 10%; left: 5%; animation-delay: 0s; }
+.element-2 { top: 20%; right: 10%; animation-delay: 1s; }
+.element-3 { bottom: 30%; left: 8%; animation-delay: 2s; }
+.element-4 { bottom: 15%; right: 5%; animation-delay: 3s; }
+.element-5 { top: 50%; left: 3%; animation-delay: 4s; }
+.element-6 { top: 60%; right: 8%; animation-delay: 5s; }
 
 @keyframes float {
-    0%, 100% {
-        transform: translateY(0px) rotate(0deg);
-    }
-    50% {
-        transform: translateY(-20px) rotate(180deg);
-    }
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-    .browse-doubts-container {
-        padding: 20px 15px;
-    }
-    
     .browse-header {
         padding: 30px 25px;
         border-radius: 20px;
@@ -648,6 +611,16 @@
     .empty-title {
         font-size: 1.5rem;
     }
+    
+    /* MODIFIED: Stack header elements on small screens */
+    .doubt-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .doubt-status {
+        align-self: flex-end;
+    }
 }
 
 /* Animation Classes */
@@ -656,14 +629,8 @@
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .slide-in {
@@ -671,14 +638,8 @@
 }
 
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 </style>
 
