@@ -1,7 +1,11 @@
 from django.contrib import admin
 from .models import User, Category, Doubt, Comment
 
+from .models import Resource
 
+@admin.register(Resource)
+class ResourceAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'added_by', 'created_at')
 @admin.register(Doubt)
 class DoubtAdmin(admin.ModelAdmin):
     list_display = ('title', 'student', 'faculty_verified', 'created_at')

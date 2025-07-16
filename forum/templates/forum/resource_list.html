@@ -1,0 +1,166 @@
+{% extends 'forum/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="resource-container fade-in">
+
+    <div class="dashboard-wrapper">
+        <h1 class="hero-title" style="font-size: 2.5rem; letter-spacing: -1px; margin-bottom: 0;">📚 Resource Hub</h1>
+        <form method="get" class="filter-form">
+            <select name="category" onchange="this.form.submit()" class="custom-select">
+                <option value="">All Categories</option>
+                <option value="DSA" {% if request.GET.category == 'DSA' %}selected{% endif %}>Data Structures</option>
+                <option value="WEB" {% if request.GET.category == 'WEB' %}selected{% endif %}>Web Development</option>
+                <option value="ML" {% if request.GET.category == 'ML' %}selected{% endif %}>Machine Learning</option>
+                <option value="PY" {% if request.GET.category == 'PY' %}selected{% endif %}>Python</option>
+                <option value="JAVA" {% if request.GET.category == 'JAVA' %}selected{% endif %}>Java</option>
+            </select>
+        </form>
+    </div>
+
+    <div class="resource-grid">
+        {% for resource in resources %}
+        <div class="glass-card resource-card">
+            <div class="card-header">
+                <h4 class="resource-title">{{ resource.title }}</h4>
+                <span class="category-badge">{{ resource.get_category_display }}</span>
+            </div>
+            <p class="resource-description">{{ resource.description }}</p>
+            <div class="card-footer">
+                <a href="{{ resource.link }}" target="_blank" class="modern-btn btn-outline">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Visit</span>
+                </a>
+                <form method="post" action="{% url 'upvote_resource' resource.id %}" class="upvote-form">
+                    {% csrf_token %}
+                    {% if user in resource.upvotes.all %}
+                        <button type="submit" class="modern-btn btn-primary upvoted" title="You have upvoted this">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span>{{ resource.total_upvotes }}</span>
+                        </button>
+                    {% else %}
+                        <button type="submit" class="modern-btn btn-outline" title="Upvote this resource">
+                            <i class="far fa-thumbs-up"></i>
+                            <span>{{ resource.total_upvotes }}</span>
+                        </button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        {% empty %}
+            <div class="glass-card text-center py-5 w-100">
+                <h2><i class="fas fa-search-minus"></i> No Resources Found</h2>
+                <p class="text-secondary">There are no resources matching your criteria. Why not add one?</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if user.is_authenticated and user.role == 'faculty' %}
+    <div class="text-center mt-5">
+        <a href="{% url 'add_resource' %}" class="modern-btn btn-success" style="padding: 12px 30px; font-size: 1rem;">
+            <i class="fas fa-plus-circle"></i>
+            <span>Add New Resource</span>
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.resource-container {
+        min-height: calc(100vh - 200px);
+        padding: 40px 20px;
+        position: relative;
+        overflow: hidden;
+}
+    
+.resource-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+}
+/* Custom styles for the Resource Hub page */
+.resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+.resource-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px;
+}
+
+.resource-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.resource-title {
+    margin-bottom: 0;
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 1.3;
+}
+
+.category-badge {
+    background-color: rgba(0, 123, 255, 0.15);
+    color: var(--accent-primary);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-left: 10px;
+}
+
+.resource-description {
+    color: var(--text-secondary);
+    flex-grow: 1;
+    margin-bottom: 20px;
+}
+
+.resource-card .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.upvote-form .modern-btn {
+    min-width: 80px; /* Ensures button width is consistent */
+}
+
+/* Custom Select Dropdown Styling */
+.filter-form {
+    min-width: 200px;
+}
+.custom-select {
+    width: 100%;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23A0AEC0' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+.custom-select:hover, .custom-select:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+</style>
+{% endblock %}

@@ -12,15 +12,17 @@
             <p class="signup-subtitle">Create your account and start solving coding doubts</p>
         </div>
         
-        <form method="post" class="signup-form">
+        <form method="post" class="signup-form" id="signupForm">
             {% csrf_token %}
             <div class="form-group">
                 {{ form|crispy }}
             </div>
             
-            <button type="submit" class="modern-btn btn-success signup-btn">
+            <!-- MODIFIED BUTTON: Added a spinner element -->
+            <button type="submit" class="modern-btn btn-success signup-btn" id="signupBtn">
                 <i class="fas fa-user-plus"></i>
                 <span>Create Account</span>
+                <div class="spinner"></div>
             </button>
         </form>
         
@@ -225,6 +227,7 @@
     overflow: hidden;
     background: linear-gradient(135deg, #1a4d3a 0%, #2d7a5f 100%);
     border: 1px solid rgba(100, 100, 100, 0.4);
+    transition: all 0.3s ease;
 }
 
 .signup-btn::before {
@@ -247,6 +250,39 @@
     box-shadow: 0 8px 25px rgba(45, 122, 95, 0.6);
     color: white;
 }
+
+/* Spinner Styles */
+.spinner {
+    display: none; /* Hidden by default */
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Loading State for the Button */
+.signup-btn.loading .spinner {
+    display: block;
+}
+
+.signup-btn.loading i,
+.signup-btn.loading span {
+    display: none;
+}
+
+.signup-btn.loading {
+    cursor: not-allowed;
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+}
+
 
 /* Signup Footer */
 .signup-footer {
@@ -484,4 +520,22 @@
     }
 }
 </style>
+
+<!-- ADDED SCRIPT for spinner functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const signupForm = document.getElementById('signupForm');
+        const signupBtn = document.getElementById('signupBtn');
+
+        if (signupForm && signupBtn) {
+            signupForm.addEventListener('submit', function() {
+                // Add the loading class to the button
+                signupBtn.classList.add('loading');
+                // Disable the button to prevent multiple submissions
+                signupBtn.disabled = true;
+            });
+        }
+    });
+</script>
+
 {% endblock %}

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,6 +72,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 16px;
         }
 
         .navbar-brand {
@@ -83,6 +83,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-shrink: 0; /* MODIFIED: Prevent brand from shrinking */
         }
 
         .navbar-brand i {
@@ -93,6 +94,8 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-shrink: 1; /* MODIFIED: Allow this container to shrink */
+            min-width: 0; /* MODIFIED: Important for flex-shrink to work */
         }
 
         .modern-btn {
@@ -106,8 +109,17 @@
             cursor: pointer;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             white-space: nowrap;
+            min-height: 38px;
+            position: relative;
+            overflow: hidden; /* MODIFIED: Hide overflow for cleaner look */
+        }
+        
+        .modern-btn > span {
+            overflow: hidden;
+            text-overflow: ellipsis; /* MODIFIED: Truncate long text */
         }
 
         .btn-primary {
@@ -134,7 +146,7 @@
         }
         
         .btn-success {
-            background-color: var(--accent-primary); /* Mapped to primary action */
+            background-color: var(--accent-primary);
             color: #fff;
         }
         .btn-success:hover {
@@ -143,7 +155,7 @@
             color: #fff;
         }
 
-        .btn-warning { /* Leaderboard */
+        .btn-warning {
             background-color: transparent;
             color: var(--accent-secondary);
             border-color: rgba(255, 193, 7, 0.2);
@@ -155,7 +167,7 @@
             box-shadow: var(--shadow-glow) var(--accent-secondary);
         }
 
-        .btn-danger { /* Logout */
+        .btn-danger {
             background-color: transparent;
             color: var(--accent-danger);
             border-color: rgba(229, 62, 62, 0.2);
@@ -166,6 +178,29 @@
             color: var(--accent-danger);
         }
         
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .modern-btn.loading .spinner {
+            display: block;
+        }
+        .modern-btn.loading i,
+        .modern-btn.loading span {
+            display: none;
+        }
+        .modern-btn.loading {
+            cursor: not-allowed;
+            background-color: #333;
+            border-color: #444;
+        }
+
         .notification-badge {
             position: absolute;
             top: -5px; right: -5px;
@@ -181,10 +216,66 @@
             border: 2px solid var(--bg-secondary);
         }
         .btn-with-badge { position: relative; }
+        
+        .dropdown-menu {
+            background: rgba(16, 16, 16, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 8px;
+            margin-top: 8px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeInDropdown 0.2s ease-out;
+        }
+        .dropdown-item {
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: transparent;
+        }
+        .dropdown-item:hover, .dropdown-item:focus {
+            background-color: rgba(0, 123, 255, 0.15);
+            color: #ffffff;
+            transform: translateX(3px);
+        }
+        .dropdown-item i {
+            width: 18px;
+            text-align: center;
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+        }
+        .dropdown-item:hover i, .dropdown-item:focus i {
+            color: var(--accent-primary);
+        }
 
-        /* Main Content */
+        .resource-coming-soon.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .resource-coming-soon .coming-soon-badge-alt {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-secondary);
+            color: #111;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+            animation: pulse 2s infinite;
+        }
+
         .main-content {
-            margin-top: 100px; /* Space for navbar */
+            margin-top: 100px;
             padding: 24px;
             min-height: calc(100vh - 180px);
         }
@@ -211,7 +302,6 @@
             border-color: rgba(255, 255, 255, 0.15);
         }
 
-        /* Hero Section Styles */
         .hero-section {
             text-align: center;
             padding: 80px 40px;
@@ -241,59 +331,6 @@
             line-height: 1.6;
         }
 
-        .hero-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 24px;
-            margin-top: 40px;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--accent-primary);
-            margin-bottom: 16px;
-        }
-
-        .feature-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .feature-description {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-        
-        h1, h2, h3, h4, h5, h6 { margin-bottom: 1rem; }
-
-        /* Code Blocks */
-        pre {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            border-left: 4px solid var(--accent-primary);
-            color: #f8f9fa;
-            font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-        }
-
-        /* Modern Footer */
         .modern-footer {
             background-color: var(--bg-secondary);
             border-top: 1px solid var(--border-color);
@@ -342,15 +379,15 @@
             transform: translateY(-3px);
         }
         
-        /* Mobile Menu */
         .mobile-menu-toggle { display: none; }
         
-        @media (max-width: 768px) {
+        @media (max-width: 992px) { /* MODIFIED: Adjusted breakpoint for better response */
             .navbar-actions {
                 display: none;
                 position: absolute;
                 top: calc(100% + 8px);
                 left: 0; right: 0;
+                width: 100%;
                 background: rgba(16, 16, 16, 0.9);
                 backdrop-filter: blur(16px);
                 border-radius: 12px;
@@ -368,17 +405,28 @@
                 font-size: 1.5rem;
             }
             .modern-btn { width: 100%; justify-content: center; }
-            .hero-title { font-size: 2.5rem; letter-spacing: -1px; }
-            .hero-subtitle { font-size: 1.1rem; }
-            .hero-features { grid-template-columns: 1fr; }
         }
         
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+
+        @keyframes fadeInDropdown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+        }
     </style>
 </head>
 <body>
@@ -388,7 +436,7 @@
                 <i class="fas fa-code-branch"></i>
                 <span>CodeForum</span>
             </a>
-
+            
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
                 <i class="fas fa-bars"></i>
             </button>
@@ -396,14 +444,25 @@
             <div class="navbar-actions" id="navbarActions">
                 {% if user.is_authenticated %}
                     {% if user.role == "student" %}
-                        <a class="modern-btn btn-outline" href="{% url 'browse_doubts' %}"><i class="fas fa-globe"></i> Browse Doubts</a>
+                        <div class="dropdown">
+                            <button class="modern-btn btn-primary dropdown-toggle" type="button" id="doubtDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-question-circle"></i>
+                                <span>Doubt</span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="doubtDropdown">
+                                <li><a class="dropdown-item" href="{% url 'ask_doubt' %}"><i class="fas fa-plus"></i> Ask Doubt</a></li>
+                                <li><a class="dropdown-item" href="{% url 'browse_doubts' %}"><i class="fas fa-globe"></i> Browse Doubts</a></li>
+                            </ul>
+                        </div>
+                        <a class="modern-btn btn-primary disabled resource-coming-soon">
+                            <i class="fas fa-book-open"></i>
+                            <span>Resources</span>
+                            <span class="coming-soon-badge-alt">Soon</span>
+                        </a>
+                        
                         <a href="{% url 'student_dashboard' %}" class="modern-btn btn-outline">
                             <i class="fas fa-tachometer-alt"></i>
                             <span>Dashboard</span>
-                        </a>
-                        <a href="{% url 'ask_doubt' %}" class="modern-btn btn-primary">
-                            <i class="fas fa-plus"></i>
-                            <span>Ask Doubt</span>
                         </a>
                         <a href="{% url 'student_profile' user.username %}" class="modern-btn btn-outline">
                             <i class="fas fa-user"></i>
@@ -423,15 +482,18 @@
                             <span>{{ user.username }}</span>
                         </a>
                     {% endif %}
+                    
+                    
                     <a href="{% url 'leaderboard' %}" class="modern-btn btn-warning">
                         <i class="fas fa-trophy"></i>
                         <span>Leaderboard</span>
                     </a>
-                    <form method="POST" action="{% url 'logout' %}" style="display: contents;">
+                    <form method="POST" action="{% url 'logout' %}" style="display: contents;" id="logoutForm">
                         {% csrf_token %}
-                        <button type="submit" class="modern-btn btn-danger">
+                        <button type="submit" class="modern-btn btn-danger" id="logoutBtn">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Logout</span>
+                            <div class="spinner"></div>
                         </button>
                     </form>
                 {% else %}
@@ -515,28 +577,53 @@
         document.addEventListener('click', function(event) {
             const navbar = document.querySelector('.modern-navbar');
             const navbarActions = document.getElementById('navbarActions');
-            if (!navbar.contains(event.target) && navbarActions.classList.contains('show')) {
+            const isClickInsideNavbar = navbar.contains(event.target);
+
+            if (!isClickInsideNavbar && navbarActions.classList.contains('show')) {
                 navbarActions.classList.remove('show');
             }
         });
+
+        // Logout spinner functionality
+        const logoutForm = document.getElementById('logoutForm');
+        if (logoutForm) {
+            logoutForm.addEventListener('submit', function() {
+                const logoutBtn = document.getElementById('logoutBtn');
+                logoutBtn.classList.add('loading');
+                logoutBtn.disabled = true;
+            });
+        }
     </script>
 
     {% if user.is_authenticated and user.role == "student" %}
     <script>
         function fetchNotifCount() {
-            fetch("{% url 'unread_notification_count' %}")
-                .then(response => response.json())
+            fetch('{% url "unread_notification_count" %}')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     const count = data.count;
                     const badge = document.getElementById("notif-count");
-                    if (count > 0) {
-                        badge.textContent = count;
-                        badge.style.display = 'flex';
-                    } else {
-                        badge.style.display = 'none';
+                    if (badge) {
+                        if (count > 0) {
+                            badge.textContent = count;
+                            badge.style.display = 'flex';
+                        } else {
+                            badge.style.display = 'none';
+                        }
                     }
                 })
-                .catch(error => console.error("Notification fetch error:", error));
+                .catch(error => {
+                    console.error("Notification fetch error:", error);
+                    const badge = document.getElementById("notif-count");
+                    if (badge) {
+                        badge.style.display = 'none';
+                    }
+                });
         }
         document.addEventListener("DOMContentLoaded", () => {
             fetchNotifCount();

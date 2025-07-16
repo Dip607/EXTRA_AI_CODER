@@ -12,6 +12,7 @@ class Category(models.Model):
         return self.name
 
 
+
 class User(AbstractUser):
     ROLE_CHOICES = (
         ('student', 'Student'),
@@ -40,7 +41,30 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.username} ({self.role})"
 
+class Resource(models.Model):
+    CATEGORY_CHOICES = [
+        ('DSA', 'Data Structures & Algorithms'),
+        ('WEB', 'Web Development'),
+        ('ML', 'Machine Learning'),
+        ('PY', 'Python'),
+        ('JAVA', 'Java'),
+        ('OTH', 'Other'),
+    ]
 
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    link = models.URLField()
+    category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
+    added_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    upvotes = models.ManyToManyField(User, related_name='resource_upvotes', blank=True)
+
+    def total_upvotes(self):
+        return self.upvotes.count()
+
+    def __str__(self):
+        return self.title
 class Doubt(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
@@ -49,6 +73,7 @@ class Doubt(models.Model):
     ai_answer = models.TextField(blank=True, null=True)
     faculty_verified = models.BooleanField(default=False)
     faculty_suggestion = models.TextField(blank=True, null=True)
+    faculty_resource_link = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     categories = models.ManyToManyField(Category, blank=True)
     is_public = models.BooleanField(default=True)

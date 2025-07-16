@@ -6,6 +6,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
 from django.core.mail import send_mail
+from .models import Resource
+from .forms import ResourceForm
 from django.db.models import Count, Q
 
 import os
@@ -32,6 +34,39 @@ from .models import OCRDoubtUpload, Doubt
 # ✅ Home
 def home(request):
     return render(request, 'forum/home.html')
+
+def resource_list(request):
+    category_filter = request.GET.get('category')
+    if category_filter:
+        resources = Resource.objects.filter(category=category_filter).order_by('-created_at')
+    else:
+        resources = Resource.objects.all().order_by('-created_at')
+    return render(request, 'forum/resource_list.html', {'resources': resources})
+
+@login_required
+def add_resource(request):
+    if request.user.role != 'faculty':
+        return redirect('resource_list')
+
+    if request.method == 'POST':
+        form = ResourceForm(request.POST)
+        if form.is_valid():
+            resource = form.save(commit=False)
+            resource.added_by = request.user
+            resource.save()
+            return redirect('resource_list')
+    else:
+        form = ResourceForm()
+    return render(request, 'forum/add_resource.html', {'form': form})
+
+@login_required
+def upvote_resource(request, resource_id):
+    resource = get_object_or_404(Resource, id=resource_id)
+    if request.user in resource.upvotes.all():
+        resource.upvotes.remove(request.user)
+    else:
+        resource.upvotes.add(request.user)
+    return redirect('resource_list')
 
 @login_required
 def ocr_doubt_upload(request):
@@ -296,9 +331,11 @@ def verify_doubt(request, doubt_id):
 
     if request.method == 'POST':
         suggestion = request.POST.get("faculty_suggestion", "")
+        resource_link = request.POST.get("faculty_resource_link", "")
         doubt.faculty_verified = True
         doubt.verified_by = request.user
         doubt.faculty_suggestion = suggestion
+        doubt.faculty_resource_link = resource_link
         doubt.save()
         Notification.objects.create(
             user=doubt.student,

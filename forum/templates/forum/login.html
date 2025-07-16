@@ -10,15 +10,17 @@
             <p class="login-subtitle">Sign in to your CodeForum account</p>
         </div>
         
-        <form method="post" class="login-form">
+        <form method="post" class="login-form" id="loginForm">
             {% csrf_token %}
             <div class="form-group">
                 {{ form.as_p }}
             </div>
             
-            <button type="submit" class="modern-btn btn-primary login-btn">
+            <!-- MODIFIED BUTTON: Added a spinner element -->
+            <button type="submit" class="modern-btn btn-primary login-btn" id="loginBtn">
                 <i class="fas fa-sign-in-alt"></i>
                 <span>Sign In</span>
+                <div class="spinner"></div>
             </button>
         </form>
         
@@ -196,6 +198,7 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
+    transition: all 0.3s ease; /* Added for smooth background transition */
 }
 
 .login-btn::before {
@@ -212,6 +215,39 @@
 .login-btn:hover::before {
     left: 100%;
 }
+
+/* Spinner Styles */
+.spinner {
+    display: none; /* Hidden by default */
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Loading State for the Button */
+.login-btn.loading .spinner {
+    display: block;
+}
+
+.login-btn.loading i,
+.login-btn.loading span {
+    display: none;
+}
+
+.login-btn.loading {
+    cursor: not-allowed;
+    background: linear-gradient(135deg, #444444 0%, #666666 100%);
+}
+
 
 /* Login Footer */
 .login-footer {
@@ -436,4 +472,22 @@
     }
 }
 </style>
+
+<!-- ADDED SCRIPT for spinner functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+
+        if (loginForm && loginBtn) {
+            loginForm.addEventListener('submit', function() {
+                // Add the loading class to the button
+                loginBtn.classList.add('loading');
+                // Disable the button to prevent multiple submissions
+                loginBtn.disabled = true;
+            });
+        }
+    });
+</script>
+
 {% endblock %}

@@ -28,6 +28,9 @@ urlpatterns = [
     path("faculty/<str:username>/", views.faculty_profile_by_username, name="faculty_profile_by_username"),
     path('upload-doubt/', views.ocr_doubt_upload, name='ocr_doubt_upload'),
     path('browse/', browse_public_doubts, name='browse_doubts'),
+    path('resources/', views.resource_list, name='resource_list'),
+    path('resources/add/', views.add_resource, name='add_resource'),
+    path('resources/upvote/<int:resource_id>/', views.upvote_resource, name='upvote_resource'),
 
 
     

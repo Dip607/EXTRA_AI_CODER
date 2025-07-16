@@ -2,6 +2,10 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+<!-- ADDED: CodeMirror CSS for styling the editor -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+
 <div class="ask-doubt-container fade-in">
     <div class="ask-doubt-card glass-card">
         <div class="ask-doubt-header">
@@ -25,7 +29,8 @@
             </div>
         </div>
 
-        <form method="POST" class="doubt-form">
+        <!-- MODIFIED: Added id to form -->
+        <form method="POST" class="doubt-form" id="doubtForm">
             {% csrf_token %}
             
             <div class="form-section">
@@ -54,6 +59,7 @@
                     <span>Code Snippet</span>
                 </div>
                 <div class="form-group">
+                    <!-- This will be replaced by the CodeMirror editor -->
                     {{ form.code_snippet|as_crispy_field }}
                 </div>
             </div>
@@ -85,9 +91,11 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="modern-btn btn-primary submit-btn">
+                <!-- MODIFIED: Added id and spinner element to button -->
+                <button type="submit" class="modern-btn btn-primary submit-btn" id="submitBtn">
                     <i class="fas fa-robot"></i>
                     <span>Submit & Get AI Help</span>
+                    <div class="spinner"></div>
                 </button>
             </div>
         </form>
@@ -229,7 +237,6 @@
     position: relative; /* Needed for the badge */
 }
 
-/* NEW STYLES for the "Coming Soon" button */
 .upload-btn.disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -277,7 +284,6 @@
     margin-bottom: 0;
 }
 
-/* Override Crispy Forms Styling */
 .doubt-form .form-group label {
     color: rgba(255, 255, 255, 0.9) !important;
     font-weight: 500;
@@ -314,12 +320,26 @@
     resize: vertical;
 }
 
+.CodeMirror {
+    height: auto;
+    min-height: 150px;
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 12px;
+    font-size: 0.95rem;
+}
+.CodeMirror-scroll {
+    min-height: 150px;
+}
+.cm-s-dracula.CodeMirror {
+    background: rgba(30, 30, 30, 0.8);
+}
+
+
 .doubt-form .form-text {
     color: rgba(255, 255, 255, 0.7) !important;
     font-size: 0.85rem;
 }
 
-/* Categories Group */
 .categories-group select {
     background: rgba(30, 30, 30, 0.8) !important;
     border: 1px solid rgba(80, 80, 80, 0.4) !important;
@@ -342,7 +362,6 @@
     color: white !important;
 }
 
-/* Checkbox Group */
 .checkbox-group {
     background: rgba(25, 25, 25, 0.6);
     border: 1px solid rgba(80, 80, 80, 0.3);
@@ -389,7 +408,6 @@
     display: block;
 }
 
-/* Form Actions */
 .form-actions {
     margin-top: 40px;
     text-align: center;
@@ -402,6 +420,9 @@
     min-width: 250px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .submit-btn::before {
@@ -419,7 +440,34 @@
     left: 100%;
 }
 
-/* Help Section */
+/* ADDED: Spinner styles */
+.spinner {
+    display: none;
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.submit-btn.loading .spinner {
+    display: block;
+}
+.submit-btn.loading i,
+.submit-btn.loading span {
+    display: none;
+}
+.submit-btn.loading {
+    cursor: not-allowed;
+    background: #555;
+}
+
+
 .help-section {
     margin-top: 40px;
     padding-top: 30px;
@@ -470,7 +518,6 @@
     flex-shrink: 0;
 }
 
-/* Floating Background Elements */
 .doubt-background-elements {
     position: absolute;
     top: 0;
@@ -488,145 +535,96 @@
     animation: float 6s ease-in-out infinite;
 }
 
-.element-1 {
-    top: 10%;
-    left: 5%;
-    animation-delay: 0s;
-}
-
-.element-2 {
-    top: 20%;
-    right: 10%;
-    animation-delay: 1s;
-}
-
-.element-3 {
-    bottom: 30%;
-    left: 8%;
-    animation-delay: 2s;
-}
-
-.element-4 {
-    bottom: 15%;
-    right: 5%;
-    animation-delay: 3s;
-}
-
-.element-5 {
-    top: 50%;
-    left: 3%;
-    animation-delay: 4s;
-}
-
-.element-6 {
-    top: 60%;
-    right: 8%;
-    animation-delay: 5s;
-}
+.element-1 { top: 10%; left: 5%; animation-delay: 0s; }
+.element-2 { top: 20%; right: 10%; animation-delay: 1s; }
+.element-3 { bottom: 30%; left: 8%; animation-delay: 2s; }
+.element-4 { bottom: 15%; right: 5%; animation-delay: 3s; }
+.element-5 { top: 50%; left: 3%; animation-delay: 4s; }
+.element-6 { top: 60%; right: 8%; animation-delay: 5s; }
 
 @keyframes float {
-    0%, 100% {
-        transform: translateY(0px) rotate(0deg);
-    }
-    50% {
-        transform: translateY(-20px) rotate(180deg);
-    }
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
-    .ask-doubt-container {
-        padding: 20px 15px;
-    }
-    
-    .ask-doubt-card {
-        padding: 30px 25px;
-        border-radius: 20px;
-    }
-    
-    .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-    
-    .header-left {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-    
-    .doubt-icon {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .doubt-icon i {
-        font-size: 1.2rem;
-    }
-    
-    .doubt-title {
-        font-size: 1.75rem;
-    }
-    
-    .upload-btn {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .doubt-form .form-control {
-        padding: 12px 14px !important;
-    }
-    
-    .submit-btn {
-        width: 100%;
-        min-width: auto;
-    }
-    
-    .help-tips {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-    
-    .floating-element {
-        font-size: 2rem;
-    }
+    .ask-doubt-container { padding: 20px 15px; }
+    .ask-doubt-card { padding: 30px 25px; border-radius: 20px; }
+    .header-content { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .header-left { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .doubt-icon { width: 50px; height: 50px; }
+    .doubt-icon i { font-size: 1.2rem; }
+    .doubt-title { font-size: 1.75rem; }
+    .upload-btn { width: 100%; justify-content: center; }
+    .doubt-form .form-control { padding: 12px 14px !important; }
+    .submit-btn { width: 100%; min-width: auto; }
+    .help-tips { grid-template-columns: 1fr; gap: 10px; }
+    .floating-element { font-size: 2rem; }
 }
 
 @media (max-width: 480px) {
-    .ask-doubt-card {
-        padding: 25px 20px;
-        margin: 10px;
-    }
-    
-    .doubt-title {
-        font-size: 1.5rem;
-    }
-    
-    .section-header {
-        font-size: 1rem;
-    }
-    
-    .tip-item {
-        padding: 10px;
-        font-size: 0.9rem;
-    }
+    .ask-doubt-card { padding: 25px 20px; margin: 10px; }
+    .doubt-title { font-size: 1.5rem; }
+    .section-header { font-size: 1rem; }
+    .tip-item { padding: 10px; font-size: 0.9rem; }
 }
 
-/* Animation Classes */
-.fade-in {
-    animation: fadeIn 0.6s ease-out;
-}
-
+.fade-in { animation: fadeIn 0.6s ease-out; }
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 </style>
+
+<!-- ADDED: CodeMirror JS files -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/clike/clike.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const codeTextarea = document.querySelector('#div_id_code_snippet textarea');
+    
+    if (codeTextarea) {
+        const editor = CodeMirror.fromTextArea(codeTextarea, {
+            lineNumbers: true,
+            mode: 'python',
+            theme: 'dracula',
+            lineWrapping: true,
+            indentUnit: 4
+        });
+
+        const categorySelect = document.querySelector('#id_categories');
+        if (categorySelect) {
+            categorySelect.addEventListener('change', function() {
+                const selectedCategory = this.options[this.selectedIndex].text.toLowerCase();
+                let mode = 'python';
+                if (selectedCategory.includes('javascript')) {
+                    mode = 'javascript';
+                } else if (selectedCategory.includes('java') || selectedCategory.includes('c++')) {
+                    mode = 'text/x-c++src';
+                }
+                editor.setOption("mode", mode);
+            });
+        }
+    }
+
+    // ADDED: Spinner functionality for submit button
+    const doubtForm = document.getElementById('doubtForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (doubtForm && submitBtn) {
+        doubtForm.addEventListener('submit', function() {
+            // Update the textarea with the editor's content before submitting
+            if (typeof editor !== 'undefined') {
+                editor.save();
+            }
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+        });
+    }
+});
+</script>
+
 {% endblock %}

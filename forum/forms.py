@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-
+from .models import Resource
 from .models import Doubt, User, OCRDoubtUpload
 
 # OCR Upload Form
@@ -62,6 +62,11 @@ class CustomUserCreationForm(UserCreationForm):
             except ValidationError as e:
                 self.add_error('password1', e)
 
+
+class ResourceForm(forms.ModelForm):
+    class Meta:
+        model = Resource
+        fields = ['title', 'description', 'link', 'category']
 
 # Ask Doubt Form
 class DoubtForm(forms.ModelForm):
