@@ -1,0 +1,13 @@
+{% comment %}
+File: forum/partials/empty_state_dashboard.html
+This partial template is displayed when there are no doubts to show.
+{% endcomment %}
+<div class="empty-state glass-card">
+    <div class="empty-icon"><i class="fas fa-question-circle"></i></div>
+    <h3 class="empty-title">No Doubts Asked Yet</h3>
+    <p class="empty-description">Start your coding journey by asking your first doubt!</p>
+    <a href="{% url 'ask_doubt' %}" class="modern-btn btn-primary empty-cta">
+        <i class="fas fa-plus-circle"></i>
+        <span>Ask Your First Doubt</span>
+    </a>
+</div>

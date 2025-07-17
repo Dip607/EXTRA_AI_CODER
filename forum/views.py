@@ -22,7 +22,10 @@ from django.http import JsonResponse
 from .models import Notification
 from django.contrib.auth.decorators import login_required
 
-
+from django.db.models.functions import TruncDate
+from django.db.models import Count
+import json
+from datetime import date, timedelta
 # forum/views.py
 
 from .forms import OCRUploadForm, DoubtForm
@@ -59,6 +62,9 @@ def add_resource(request):
         form = ResourceForm()
     return render(request, 'forum/add_resource.html', {'form': form})
 
+def resource_hub(request):
+    resources = Resource.objects.all()
+    return render(request, 'forum/resource_hub.html', {'resources': resources})
 @login_required
 def upvote_resource(request, resource_id):
     resource = get_object_or_404(Resource, id=resource_id)
@@ -180,8 +186,56 @@ def signup_view(request):
 @login_required
 @user_passes_test(lambda u: u.is_authenticated and u.role == 'student')
 def student_dashboard(request):
+    """
+    This view prepares all the data needed for the interactive student dashboard,
+    including the contribution heatmap and the current streak.
+    """
+    # Fetch all doubts for the current student, ordered by most recent
     doubts = Doubt.objects.filter(student=request.user).order_by('-created_at')
-    return render(request, 'forum/student_dashboard.html', {'doubts': doubts})
+    in_progress_doubts = doubts.filter(faculty_verified=False)
+
+    # --- Heatmap & Streak Logic ---
+
+    # 1. Get all unique contribution dates for the user
+    contribution_dates = Doubt.objects.filter(student=request.user) \
+                                      .annotate(date=TruncDate('created_at')) \
+                                      .values('date') \
+                                      .distinct() \
+                                      .order_by('-date')
+
+    # 2. Format data for the heatmap (date: count)
+    contribution_data = {
+        item['date'].strftime('%Y-%m-%d'): 1 
+        for item in contribution_dates
+    }
+
+    # 3. Calculate the current streak
+    streak_dates = [item['date'] for item in contribution_dates]
+    current_streak = 0
+    if streak_dates:
+        today = date.today()
+        # A streak is valid if the last contribution was today or yesterday
+        if streak_dates[0] == today or streak_dates[0] == today - timedelta(days=1):
+            current_streak = 1
+            # Iterate backwards from the second most recent date
+            for i in range(len(streak_dates) - 1):
+                # Check if the next date is exactly one day before the current one
+                if streak_dates[i] - timedelta(days=1) == streak_dates[i+1]:
+                    current_streak += 1
+                else:
+                    break # The streak is broken
+
+    # --- Prepare context for the template ---
+    context = {
+        'doubts': doubts,
+        'in_progress_doubts': in_progress_doubts,
+        'contribution_data': json.dumps(contribution_data), # Pass as a JSON string
+        'current_streak': current_streak,
+        # 'leaderboard_rank': get_user_rank(request.user) # Placeholder for rank logic
+    }
+    
+    # MODIFIED: Pass the entire context dictionary to the template
+    return render(request, 'forum/student_dashboard.html', context)
 
 
 # ✅ Faculty Dashboard

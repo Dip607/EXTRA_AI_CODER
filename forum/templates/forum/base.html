@@ -73,6 +73,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 16px;
+            flex-wrap: nowrap; /* Ensure items stay on one line */
         }
 
         .navbar-brand {
@@ -83,7 +84,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            flex-shrink: 0; /* MODIFIED: Prevent brand from shrinking */
+            flex-shrink: 0; 
         }
 
         .navbar-brand i {
@@ -94,8 +95,8 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            flex-shrink: 1; /* MODIFIED: Allow this container to shrink */
-            min-width: 0; /* MODIFIED: Important for flex-shrink to work */
+            flex-shrink: 1; 
+            min-width: 0; 
         }
 
         .modern-btn {
@@ -114,12 +115,12 @@
             white-space: nowrap;
             min-height: 38px;
             position: relative;
-            overflow: hidden; /* MODIFIED: Hide overflow for cleaner look */
+            overflow: hidden;
         }
         
         .modern-btn > span {
             overflow: hidden;
-            text-overflow: ellipsis; /* MODIFIED: Truncate long text */
+            text-overflow: ellipsis;
         }
 
         .btn-primary {
@@ -381,7 +382,8 @@
         
         .mobile-menu-toggle { display: none; }
         
-        @media (max-width: 992px) { /* MODIFIED: Adjusted breakpoint for better response */
+        /* MODIFIED: Adjusted breakpoint to trigger mobile menu sooner */
+        @media (max-width: 1200px) {
             .navbar-actions {
                 display: none;
                 position: absolute;
@@ -454,11 +456,8 @@
                                 <li><a class="dropdown-item" href="{% url 'browse_doubts' %}"><i class="fas fa-globe"></i> Browse Doubts</a></li>
                             </ul>
                         </div>
-                        <a class="modern-btn btn-primary disabled resource-coming-soon">
-                            <i class="fas fa-book-open"></i>
-                            <span>Resources</span>
-                            <span class="coming-soon-badge-alt">Soon</span>
-                        </a>
+                        
+                        
                         
                         <a href="{% url 'student_dashboard' %}" class="modern-btn btn-outline">
                             <i class="fas fa-tachometer-alt"></i>
@@ -477,12 +476,19 @@
                             <i class="fas fa-chalkboard-teacher"></i>
                             <span>Dashboard</span>
                         </a>
+                        
+                        
                         <a href="{% url 'faculty_profile_by_username' user.username %}" class="modern-btn btn-outline">
                             <i class="fas fa-user-tie"></i>
                             <span>{{ user.username }}</span>
                         </a>
                     {% endif %}
                     
+                    <a class="modern-btn btn-primary " href="{%url 'resource_list' %}">
+                        <i class="fas fa-book-open"></i>
+                        <span>Resources</span>
+                        
+                    </a>
                     
                     <a href="{% url 'leaderboard' %}" class="modern-btn btn-warning">
                         <i class="fas fa-trophy"></i>

@@ -1,166 +1,788 @@
 {% extends 'forum/base.html' %}
-{% load static %}
-
 {% block content %}
-<div class="resource-container fade-in">
-
-    <div class="dashboard-wrapper">
-        <h1 class="hero-title" style="font-size: 2.5rem; letter-spacing: -1px; margin-bottom: 0;">📚 Resource Hub</h1>
-        <form method="get" class="filter-form">
-            <select name="category" onchange="this.form.submit()" class="custom-select">
-                <option value="">All Categories</option>
-                <option value="DSA" {% if request.GET.category == 'DSA' %}selected{% endif %}>Data Structures</option>
-                <option value="WEB" {% if request.GET.category == 'WEB' %}selected{% endif %}>Web Development</option>
-                <option value="ML" {% if request.GET.category == 'ML' %}selected{% endif %}>Machine Learning</option>
-                <option value="PY" {% if request.GET.category == 'PY' %}selected{% endif %}>Python</option>
-                <option value="JAVA" {% if request.GET.category == 'JAVA' %}selected{% endif %}>Java</option>
-            </select>
-        </form>
-    </div>
-
-    <div class="resource-grid">
-        {% for resource in resources %}
-        <div class="glass-card resource-card">
-            <div class="card-header">
-                <h4 class="resource-title">{{ resource.title }}</h4>
-                <span class="category-badge">{{ resource.get_category_display }}</span>
-            </div>
-            <p class="resource-description">{{ resource.description }}</p>
-            <div class="card-footer">
-                <a href="{{ resource.link }}" target="_blank" class="modern-btn btn-outline">
-                    <i class="fas fa-external-link-alt"></i>
-                    <span>Visit</span>
-                </a>
-                <form method="post" action="{% url 'upvote_resource' resource.id %}" class="upvote-form">
-                    {% csrf_token %}
-                    {% if user in resource.upvotes.all %}
-                        <button type="submit" class="modern-btn btn-primary upvoted" title="You have upvoted this">
-                            <i class="fas fa-thumbs-up"></i>
-                            <span>{{ resource.total_upvotes }}</span>
-                        </button>
-                    {% else %}
-                        <button type="submit" class="modern-btn btn-outline" title="Upvote this resource">
-                            <i class="far fa-thumbs-up"></i>
-                            <span>{{ resource.total_upvotes }}</span>
-                        </button>
-                    {% endif %}
-                </form>
+<div class="resource-hub-container fade-in">
+    <div class="resource-hub-wrapper">
+        <!-- Resource Hub Header -->
+        <div class="resource-header glass-card">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="resource-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="header-text">
+                        <h2 class="resource-title">Resource Hub</h2>
+                        <p class="resource-subtitle">Discover curated learning resources for your coding journey</p>
+                    </div>
+                </div>
+                {% if user.is_authenticated and user.role == 'faculty' %}
+                    <div class="header-actions">
+                        <a href="{% url 'add_resource' %}" class="modern-btn btn-success add-resource-btn">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Add New Resource</span>
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
-        {% empty %}
-            <div class="glass-card text-center py-5 w-100">
-                <h2><i class="fas fa-search-minus"></i> No Resources Found</h2>
-                <p class="text-secondary">There are no resources matching your criteria. Why not add one?</p>
+
+        <!-- Category Filter -->
+        <div class="filter-section glass-card">
+            <div class="filter-header">
+                <i class="fas fa-filter"></i>
+                <span>Filter by Category</span>
             </div>
-        {% endfor %}
+            <form method="get" class="category-filter-form">
+                <div class="filter-dropdown">
+                    <select name="category" onchange="this.form.submit()" class="category-select">
+                        <option value="">All Categories</option>
+                        <option value="DSA" {% if request.GET.category == 'DSA' %}selected{% endif %}>Data Structures & Algorithms</option>
+                        <option value="WEB" {% if request.GET.category == 'WEB' %}selected{% endif %}>Web Development</option>
+                        <option value="ML" {% if request.GET.category == 'ML' %}selected{% endif %}>Machine Learning</option>
+                        <option value="PY" {% if request.GET.category == 'PY' %}selected{% endif %}>Python</option>
+                        <option value="JAVA" {% if request.GET.category == 'JAVA' %}selected{% endif %}>Java</option>
+                    </select>
+                    <div class="select-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Resources Grid -->
+        <div class="resources-container">
+            {% if resources %}
+                <div class="resources-grid">
+                    {% for resource in resources %}
+                        <div class="resource-card glass-card slide-in" style="animation-delay: {{ forloop.counter0|floatformat:1 }}s">
+                            <div class="resource-card-header">
+                                <div class="resource-category">
+                                    <div class="category-badge category-{{ resource.category|lower }}">
+                                        {% if resource.category == 'DSA' %}
+                                            <i class="fas fa-project-diagram"></i>
+                                        {% elif resource.category == 'WEB' %}
+                                            <i class="fas fa-globe"></i>
+                                        {% elif resource.category == 'ML' %}
+                                            <i class="fas fa-brain"></i>
+                                        {% elif resource.category == 'PY' %}
+                                            <i class="fab fa-python"></i>
+                                        {% elif resource.category == 'JAVA' %}
+                                            <i class="fab fa-java"></i>
+                                        {% else %}
+                                            <i class="fas fa-code"></i>
+                                        {% endif %}
+                                        <span>{{ resource.get_category_display }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="resource-card-content">
+                                <h3 class="resource-card-title">{{ resource.title }}</h3>
+                                <p class="resource-description">{{ resource.description }}</p>
+                            </div>
+
+                            <div class="resource-card-footer">
+                                <div class="resource-actions">
+                                    <a href="{{ resource.link }}" target="_blank" class="resource-link">
+                                        <i class="fas fa-external-link-alt"></i>
+                                        <span>Visit Resource</span>
+                                    </a>
+                                    
+                                    <form method="post" action="{% url 'upvote_resource' resource.id %}" class="upvote-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="upvote-btn {% if user in resource.upvotes.all %}upvoted{% endif %}">
+                                            <i class="fas fa-thumbs-up"></i>
+                                            <span class="upvote-count">{{ resource.total_upvotes }}</span>
+                                            {% if user in resource.upvotes.all %}
+                                                <span class="upvote-status">Upvoted</span>
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state glass-card">
+                    <div class="empty-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="empty-title">No Resources Found</h3>
+                    <p class="empty-description">
+                        {% if request.GET.category %}
+                            No resources found in this category. Try selecting a different category or browse all resources.
+                        {% else %}
+                            No resources available yet. Check back later for new learning materials!
+                        {% endif %}
+                    </p>
+                    {% if user.is_authenticated and user.role == 'faculty' %}
+                        <a href="{% url 'add_resource' %}" class="modern-btn btn-primary empty-cta">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Add First Resource</span>
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
     </div>
 
-    {% if user.is_authenticated and user.role == 'faculty' %}
-    <div class="text-center mt-5">
-        <a href="{% url 'add_resource' %}" class="modern-btn btn-success" style="padding: 12px 30px; font-size: 1rem;">
-            <i class="fas fa-plus-circle"></i>
-            <span>Add New Resource</span>
-        </a>
+    <!-- Background Elements -->
+    <div class="resource-background-elements">
+        <div class="floating-element element-1">
+            <i class="fas fa-book-open"></i>
+        </div>
+        <div class="floating-element element-2">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="floating-element element-3">
+            <i class="fas fa-lightbulb"></i>
+        </div>
+        <div class="floating-element element-4">
+            <i class="fas fa-code"></i>
+        </div>
+        <div class="floating-element element-5">
+            <i class="fab fa-python"></i>
+        </div>
+        <div class="floating-element element-6">
+            <i class="fas fa-brain"></i>
+        </div>
     </div>
-    {% endif %}
 </div>
 
 <style>
-.resource-container {
-        min-height: calc(100vh - 200px);
-        padding: 40px 20px;
-        position: relative;
-        overflow: hidden;
-}
-    
-.resource-wrapper {
-        max-width: 1200px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 10;
-}
-/* Custom styles for the Resource Hub page */
-.resource-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 24px;
+/* Resource Hub Container */
+.resource-hub-container {
+    min-height: calc(100vh - 200px);
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
 }
 
-.resource-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 24px;
+.resource-hub-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
 }
 
-.resource-card .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 12px;
-    margin-bottom: 16px;
+/* Resource Header */
+.resource-header {
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 24px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
 }
 
-.resource-title {
-    margin-bottom: 0;
-    font-weight: 600;
-    font-size: 1.25rem;
-    line-height: 1.3;
+.resource-header:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
 }
 
-.category-badge {
-    background-color: rgba(0, 123, 255, 0.15);
-    color: var(--accent-primary);
-    padding: 4px 10px;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    white-space: nowrap;
-    margin-left: 10px;
-}
-
-.resource-description {
-    color: var(--text-secondary);
-    flex-grow: 1;
-    margin-bottom: 20px;
-}
-
-.resource-card .card-footer {
+.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    gap: 30px;
+    flex-wrap: wrap;
 }
 
-.upvote-form .modern-btn {
-    min-width: 80px; /* Ensures button width is consistent */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-/* Custom Select Dropdown Styling */
-.filter-form {
-    min-width: 200px;
+.resource-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #333333 0%, #555555 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
-.custom-select {
+
+.resource-icon i {
+    font-size: 1.8rem;
+    color: white;
+}
+
+.resource-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.resource-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.add-resource-btn {
+    padding: 14px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Filter Section */
+.filter-section {
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.filter-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.filter-header i {
+    color: #888888;
+}
+
+.category-filter-form {
     width: 100%;
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 10px 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23A0AEC0' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
 }
-.custom-select:hover, .custom-select:focus {
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+
+.filter-dropdown {
+    position: relative;
+    max-width: 300px;
+}
+
+.category-select {
+    width: 100%;
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 12px;
+    color: white;
+    padding: 12px 40px 12px 16px;
+    font-size: 1rem;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-select:focus {
+    outline: none;
+    border-color: #666666;
+    background: rgba(40, 40, 40, 0.9);
+    box-shadow: 0 0 0 3px rgba(100, 100, 100, 0.2);
+}
+
+.category-select option {
+    background: rgba(30, 30, 30, 0.9);
+    color: white;
+    padding: 10px;
+}
+
+.select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888888;
+    pointer-events: none;
+    font-size: 0.9rem;
+}
+
+/* Resources Grid */
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 30px;
+}
+
+.resource-card {
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.resource-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    background: rgba(25, 25, 25, 0.9);
+}
+
+.resource-card-header {
+    margin-bottom: 20px;
+}
+
+.category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid rgba(80, 80, 80, 0.4);
+}
+
+.category-dsa {
+    background: rgba(139, 69, 19, 0.2);
+    color: #daa520;
+    border-color: rgba(218, 165, 32, 0.3);
+}
+
+.category-web {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.category-ml {
+    background: rgba(168, 85, 247, 0.2);
+    color: #a855f7;
+    border-color: rgba(168, 85, 247, 0.3);
+}
+
+.category-py {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.category-java {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.resource-card-content {
+    margin-bottom: 25px;
+}
+
+.resource-card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.resource-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.resource-card-footer {
+    border-top: 1px solid rgba(80, 80, 80, 0.3);
+    padding-top: 20px;
+}
+
+.resource-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.resource-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #cccccc;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 10px 16px;
+    background: rgba(30, 30, 30, 0.6);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    flex: 1;
+    justify-content: center;
+}
+
+.resource-link:hover {
+    color: #ffffff;
+    background: rgba(40, 40, 40, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    text-decoration: none;
+}
+
+.upvote-form {
+    margin: 0;
+}
+
+.upvote-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(30, 30, 30, 0.6);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.upvote-btn:hover {
+    background: rgba(40, 40, 40, 0.8);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.upvote-btn.upvoted {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.upvote-btn.upvoted:hover {
+    background: rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+}
+
+.upvote-count {
+    font-weight: 600;
+}
+
+.upvote-status {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 80px 40px;
+    background: rgba(20, 20, 20, 0.9);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(80, 80, 80, 0.4);
+    border-radius: 24px;
+}
+
+.empty-icon {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #333333 0%, #555555 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+.empty-icon i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.empty-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.empty-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.empty-cta {
+    padding: 16px 32px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Modern Button */
+.modern-btn {
+    padding: 12px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modern-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.modern-btn:hover::before {
+    left: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #333333 0%, #555555 100%);
+    color: white;
+    border: 1px solid rgba(100, 100, 100, 0.5);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #1a4d3a 0%, #2d7a5f 100%);
+    color: white;
+    border: 1px solid rgba(100, 100, 100, 0.4);
+}
+
+.btn-primary:hover,
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(80, 80, 80, 0.6);
+    color: white;
+    text-decoration: none;
+}
+
+/* Floating Background Elements */
+.resource-background-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.floating-element {
+    position: absolute;
+    color: rgba(100, 100, 100, 0.1);
+    font-size: 3rem;
+    animation: float 6s ease-in-out infinite;
+}
+
+.element-1 {
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.element-2 {
+    top: 20%;
+    right: 10%;
+    animation-delay: 1s;
+}
+
+.element-3 {
+    bottom: 30%;
+    left: 8%;
+    animation-delay: 2s;
+}
+
+.element-4 {
+    bottom: 15%;
+    right: 5%;
+    animation-delay: 3s;
+}
+
+.element-5 {
+    top: 50%;
+    left: 3%;
+    animation-delay: 4s;
+}
+
+.element-6 {
+    top: 60%;
+    right: 8%;
+    animation-delay: 5s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .resource-hub-container {
+        padding: 20px 15px;
+    }
+    
+    .resource-header {
+        padding: 30px 25px;
+        border-radius: 20px;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .resource-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .resource-icon i {
+        font-size: 1.5rem;
+    }
+    
+    .resource-title {
+        font-size: 1.8rem;
+    }
+    
+    .add-resource-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .filter-section {
+        padding: 20px;
+    }
+    
+    .filter-dropdown {
+        max-width: 100%;
+    }
+    
+    .resources-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .resource-card {
+        padding: 20px;
+    }
+    
+    .resource-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .resource-link {
+        width: 100%;
+    }
+    
+    .upvote-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .floating-element {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .resource-header,
+    .filter-section,
+    .resource-card,
+    .empty-state {
+        padding: 20px 15px;
+        margin: 10px;
+    }
+    
+    .resource-title {
+        font-size: 1.5rem;
+    }
+    
+    .empty-state {
+        padding: 40px 20px;
+    }
+    
+    .empty-icon {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .empty-icon i {
+        font-size: 2rem;
+    }
+    
+    .empty-title {
+        font-size: 1.5rem;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 </style>
 {% endblock %}

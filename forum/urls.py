@@ -1,6 +1,7 @@
 # forum/urls.py
+  
 
-from django.urls import path
+from django.urls import path,include
 from . import views
 from django.urls import path
 from django.contrib.auth import views as auth_views
@@ -29,8 +30,10 @@ urlpatterns = [
     path('upload-doubt/', views.ocr_doubt_upload, name='ocr_doubt_upload'),
     path('browse/', browse_public_doubts, name='browse_doubts'),
     path('resources/', views.resource_list, name='resource_list'),
+    path('resources/', views.resource_hub, name='resource_hub'),
     path('resources/add/', views.add_resource, name='add_resource'),
     path('resources/upvote/<int:resource_id>/', views.upvote_resource, name='upvote_resource'),
+   
 
 
     

@@ -1,0 +1,37 @@
+{% comment %}
+File: forum/partials/doubt_card.html
+This partial template defines the structure for a single doubt card.
+{% endcomment %}
+<div class="doubt-card glass-card">
+    <div class="doubt-card-header">
+        <div class="doubt-status">
+            {% if doubt.faculty_verified %}
+                <div class="status-badge verified">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Verified by Faculty</span>
+                </div>
+            {% else %}
+                <div class="status-badge pending">
+                    <i class="fas fa-clock"></i>
+                    <span>Awaiting Verification</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="doubt-card-content">
+        <h3 class="doubt-card-title">
+            <a href="{% url 'view_doubt' doubt.id %}" class="doubt-link">{{ doubt.title }}</a>
+        </h3>
+        <div class="doubt-preview">
+            <div class="preview-header"><i class="fas fa-robot"></i><span>AI Answer Preview</span></div>
+            <div class="preview-content">{{ doubt.ai_answer|truncatechars:120 }}</div>
+        </div>
+    </div>
+    <div class="doubt-card-footer">
+        <div class="doubt-meta">
+            <div class="meta-item"><i class="fas fa-calendar-alt"></i><span>{{ doubt.created_at|date:"M d, Y" }}</span></div>
+            <div class="meta-item"><i class="fas fa-eye"></i><span>View Details</span></div>
+        </div>
+        <a href="{% url 'view_doubt' doubt.id %}" class="modern-btn btn-primary view-btn"><i class="fas fa-arrow-right"></i><span>View</span></a>
+    </div>
+</div>
