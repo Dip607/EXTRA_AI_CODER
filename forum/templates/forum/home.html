@@ -3,7 +3,6 @@
 
 {% block content %}
 
-<!-- Hero Section -->
 <div data-scroll-container>
  
  <div class="hero-section fade-in">
@@ -11,28 +10,27 @@
         <h1 class="hero-title"> 👋 Welcome to the Code Doubt Forum</h1>
         <p class="hero-subtitle">This is a private AI-powered doubt solving platform for college students.</p>
         
-        <div class="hero-actions">
+         <div class="hero-actions">
+            {% if user.role == "student" %}
             <a href="{% url 'ask_doubt' %}" class="hero-btn btn-primary">
-                <i class="fas fa-question-circle"></i>
-                Ask a Coding Doubt
+                <span>❓</span> Ask a Coding Doubt
             </a>
+            {% endif %}
             {% if not user.is_authenticated %}
                 <a href="{% url 'signup' %}" class="hero-btn btn-secondary">
-                    <i class="fas fa-user-plus"></i>
-                    Join Community
+                    <span>✨</span> Join Community
                 </a>
             {% endif %}
+
         </div>
     </div>
  </div>
 
 
-<!-- Features Section -->
- <div class="features-section">
+<div class="features-section">
     <div class="section-header">
         <h2 class="section-title">
-            <i class="fas fa-star"></i>
-            Platform Features
+            <span>⭐</span> Platform Features
         </h2>
         <p class="section-subtitle">Everything you need to solve coding doubts efficiently</p>
     </div>
@@ -40,60 +38,52 @@
     <div class="features-grid">
         <div class="feature-card slide-in">
             <div class="feature-icon">
-                <i class="fas fa-robot"></i>
-            </div>
+                <span>🤖</span> </div>
             <h3 class="feature-title">AI-Powered Solutions</h3>
             <p class="feature-description">Get instant help with advanced AI that understands your coding problems and provides detailed explanations.</p>
         </div>
         
         <div class="feature-card slide-in">
             <div class="feature-icon">
-                <i class="fas fa-users"></i>
-            </div>
+                <span>👥</span> </div>
             <h3 class="feature-title">Expert Faculty</h3>
             <p class="feature-description">Connect with experienced faculty members who provide personalized guidance and mentorship.</p>
         </div>
         
         <div class="feature-card slide-in">
             <div class="feature-icon">
-                <i class="fas fa-code"></i>
-            </div>
+                <span>💻</span> </div>
             <h3 class="feature-title">Multi-Language Support</h3>
             <p class="feature-description">Get help with Python, Java, C++, JavaScript, and many other programming languages.</p>
         </div>
         
         <div class="feature-card slide-in">
             <div class="feature-icon">
-                <i class="fas fa-trophy"></i>
-            </div>
+                <span>🏆</span> </div>
             <h3 class="feature-title">Gamified Learning</h3>
             <p class="feature-description">Earn points, badges, and climb the leaderboard while helping others and solving problems.</p>
         </div>
         
         <div class="feature-card slide-in">
             <div class="feature-icon">
-                <i class="fas fa-clock"></i>
-            </div>
+                <span>⏰</span> </div>
             <h3 class="feature-title">24/7 Availability</h3>
             <p class="feature-description">Get help anytime, anywhere. Our platform is always available when you need assistance.</p>
         </div>
         
         <div class="feature-card slide-in">
             <div class="feature-icon">
-                <i class="fas fa-shield-alt"></i>
-            </div>
+                <span>🛡️</span> </div>
             <h3 class="feature-title">Private & Secure</h3>
             <p class="feature-description">Your code and questions are kept private and secure within your college community.</p>
         </div>
     </div>
  </div>
 
-<!-- Stats Section -->
- <div class="stats-section">
+<div class="stats-section">
     <div class="section-header">
         <h2 class="section-title">
-            <i class="fas fa-chart-line"></i>
-            Community Impact
+            <span>📊</span> Community Impact
         </h2>
         <p class="section-subtitle">See how our community is growing and helping students succeed</p>
     </div>
@@ -101,44 +91,38 @@
     <div class="stats-grid">
         <div class="stat-card fade-in">
             <div class="stat-icon">
-                <i class="fas fa-question-circle"></i>
-            </div>
+                <span>❓</span> </div>
             <div class="stat-number">1,250+</div>
             <div class="stat-label">Doubts Solved</div>
         </div>
         
         <div class="stat-card fade-in">
             <div class="stat-icon">
-                <i class="fas fa-users"></i>
-            </div>
+                <span>👥</span> </div>
             <div class="stat-number">500+</div>
             <div class="stat-label">Active Students</div>
         </div>
         
         <div class="stat-card fade-in">
             <div class="stat-icon">
-                <i class="fas fa-chalkboard-teacher"></i>
-            </div>
+                <span>🧑‍🏫</span> </div>
             <div class="stat-number">25+</div>
             <div class="stat-label">Expert Faculty</div>
         </div>
         
         <div class="stat-card fade-in">
             <div class="stat-icon">
-                <i class="fas fa-clock"></i>
-            </div>
+                <span>⏱️</span> </div>
             <div class="stat-number">< 2 hrs</div>
             <div class="stat-label">Avg Response Time</div>
         </div>
     </div>
  </div>
 
-<!-- How It Works Section -->
- <div class="how-it-works-section">
+<div class="how-it-works-section">
     <div class="section-header">
         <h2 class="section-title">
-            <i class="fas fa-cogs"></i>
-            How It Works
+            <span>⚙️</span> How It Works
         </h2>
         <p class="section-subtitle">Simple steps to get your coding doubts resolved</p>
     </div>
@@ -150,14 +134,12 @@
                 <h3 class="step-title">Ask Your Doubt</h3>
                 <p class="step-description">Post your coding question with relevant code snippets and error messages.</p>
                 <div class="step-icon">
-                    <i class="fas fa-edit"></i>
-                </div>
+                    <span>📝</span> </div>
             </div>
         </div>
         
         <div class="step-arrow">
-            <i class="fas fa-arrow-right"></i>
-        </div>
+            <span>➡️</span> </div>
         
         <div class="step-card slide-in">
             <div class="step-number">2</div>
@@ -165,14 +147,12 @@
                 <h3 class="step-title">Get AI Analysis</h3>
                 <p class="step-description">Our AI instantly analyzes your code and provides initial suggestions.</p>
                 <div class="step-icon">
-                    <i class="fas fa-robot"></i>
-                </div>
+                    <span>🤖</span> </div>
             </div>
         </div>
         
         <div class="step-arrow">
-            <i class="fas fa-arrow-right"></i>
-        </div>
+            <span>➡️</span> </div>
         
         <div class="step-card slide-in">
             <div class="step-number">3</div>
@@ -180,14 +160,12 @@
                 <h3 class="step-title">Faculty Review</h3>
                 <p class="step-description">Expert faculty members review and provide detailed explanations.</p>
                 <div class="step-icon">
-                    <i class="fas fa-user-tie"></i>
-                </div>
+                    <span>🧑‍💼</span> </div>
             </div>
         </div>
         
         <div class="step-arrow">
-            <i class="fas fa-arrow-right"></i>
-        </div>
+            <span>➡️</span> </div>
         
         <div class="step-card slide-in">
             <div class="step-number">4</div>
@@ -195,61 +173,48 @@
                 <h3 class="step-title">Learn & Grow</h3>
                 <p class="step-description">Understand the solution and earn points for active participation.</p>
                 <div class="step-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
+                    <span>🎓</span> </div>
             </div>
         </div>
     </div>
  </div>
 
-<!-- Popular Topics Section -->
- <div class="topics-section">
+<div class="topics-section">
     <div class="section-header">
         <h2 class="section-title">
-            <i class="fas fa-tags"></i>
-            Popular Topics
+            <span>🏷️</span> Popular Topics
         </h2>
         <p class="section-subtitle">Most discussed programming topics in our community</p>
     </div>
     
     <div class="topics-grid">
         <div class="topic-tag fade-in">
-            <i class="fab fa-python"></i>
-            <span>Python</span>
+            <span>🐍</span> <span>Python</span>
         </div>
         <div class="topic-tag fade-in">
-            <i class="fab fa-java"></i>
-            <span>Java</span>
+            <span>☕</span> <span>Java</span>
         </div>
         <div class="topic-tag fade-in">
-            <i class="fab fa-js-square"></i>
-            <span>JavaScript</span>
+            <span>📜</span> <span>JavaScript</span>
         </div>
         <div class="topic-tag fade-in">
-            <i class="fas fa-database"></i>
-            <span>SQL</span>
+            <span>🗃️</span> <span>SQL</span>
         </div>
         <div class="topic-tag fade-in">
-            <i class="fab fa-react"></i>
-            <span>React</span>
+            <span>⚛️</span> <span>React</span>
         </div>
         <div class="topic-tag fade-in">
-            <i class="fas fa-code"></i>
-            <span>C++</span>
+            <span>C++</span> </div>
+        <div class="topic-tag fade-in">
+            <span>📱</span> <span>Mobile Dev</span>
         </div>
         <div class="topic-tag fade-in">
-            <i class="fas fa-mobile-alt"></i>
-            <span>Mobile Dev</span>
-        </div>
-        <div class="topic-tag fade-in">
-            <i class="fas fa-server"></i>
-            <span>Backend</span>
+            <span>🌐</span> <span>Backend</span>
         </div>
     </div>
  </div>
 
-<!-- CTA Section -->
- <div class="cta-section">
+<div class="cta-section">
     <div class="cta-content">
         <h2 class="cta-title">Ready to Solve Your Coding Doubts?</h2>
         <p class="cta-subtitle">Join thousands of students who are already getting help with their programming challenges.</p>
@@ -257,21 +222,17 @@
         <div class="cta-actions">
             {% if user.is_authenticated %}
                 <a href="{% url 'ask_doubt' %}" class="cta-btn btn-primary">
-                    <i class="fas fa-question-circle"></i>
-                    Ask Your First Doubt
+                    <span>❓</span> Ask Your First Doubt
                 </a>
                 <a href="{% url 'leaderboard' %}" class="cta-btn btn-secondary">
-                    <i class="fas fa-trophy"></i>
-                    View Leaderboard
+                    <span>🏆</span> View Leaderboard
                 </a>
             {% else %}
                 <a href="{% url 'signup' %}" class="cta-btn btn-primary">
-                    <i class="fas fa-user-plus"></i>
-                    Join Now - It's Free
+                    <span>✨</span> Join Now - It's Free
                 </a>
                 <a href="{% url 'login' %}" class="cta-btn btn-secondary">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Already a Member?
+                    <span>➡️</span> Already a Member?
                 </a>
             {% endif %}
         </div>
@@ -280,9 +241,78 @@
 </div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
 
-<!-- Locomotive Scroll JS -->
 <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
 <style>
+/* --- Modern Pre-loader Animation (Slower) --- */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0A0A0A;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* MODIFIED: Increased duration for a slower fade-out */
+    transition: opacity 1.5s ease, visibility 1.5s ease;
+}
+
+#preloader.loaded {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-graphic {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(0, 123, 255, 0.2);
+    border-top-color: #007BFF;
+    border-radius: 50%;
+    animation: preloader-spin 1s linear infinite, preloader-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes preloader-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes preloader-glow {
+    from {
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.3), 0 0 20px rgba(0, 123, 255, 0.2);
+    }
+    to {
+        box-shadow: 0 0 20px rgba(0, 123, 255, 0.6), 0 0 40px rgba(0, 123, 255, 0.4);
+    }
+}
+
+/* Initially hide the main content */
+[data-scroll-container] {
+    visibility: hidden;
+    opacity: 0;
+    /* MODIFIED: Slower fade-in with a slight delay */
+    transition: opacity 7s ease-in 4s;
+}
+
+/* Show main content when the page is loaded */
+body.page-loaded [data-scroll-container] {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Initially hide the main content to prevent flash */
+[data-scroll-container] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+
+/* Show main content when the page is loaded */
+body.page-loaded [data-scroll-container] {
+    visibility: visible;
+    opacity: 1;
+}
+
 /* Hero Section */
 html {
     scroll-behavior: smooth;

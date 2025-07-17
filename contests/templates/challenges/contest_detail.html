@@ -1,0 +1,26 @@
+{% extends 'forum/base.html' %}
+{% block content %}
+  <div class="container mt-4">
+    <h3>{{ contest.title }}</h3>
+    <p>{{ contest.description }}</p>
+    <p><strong>Start:</strong> {{ contest.start_time }} | <strong>End:</strong> {{ contest.end_time }}</p>
+
+    <h5 class="mt-4">Leaderboard</h5>
+    <table class="table table-bordered">
+      <tr>
+        <th>Rank</th>
+        <th>User</th>
+        <th>Score</th>
+      </tr>
+      {% for entry in leaderboard %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ entry.user.username }}</td>
+        <td>{{ entry.score }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3">No submissions yet.</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endblock %}

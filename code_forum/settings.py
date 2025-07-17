@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'forum',
+    
+    'contests',
+    
     'crispy_forms',
     'crispy_bootstrap4',
     'django.contrib.admin',

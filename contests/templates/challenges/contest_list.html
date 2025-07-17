@@ -1,0 +1,21 @@
+{% extends 'forum/base.html' %}
+{% block content %}
+  <div class="container mt-4">
+    <h2 class="mb-3">College Coding Contests</h2>
+    {% if user.is_authenticated and user.is_faculty %}
+      <a href="{% url 'create_contest' %}" class="btn btn-success mb-3">Create Contest</a>
+    {% endif %}
+    {% for contest in contests %}
+      <div class="card mb-2">
+        <div class="card-body">
+          <h5>{{ contest.title }}</h5>
+          <p>{{ contest.description }}</p>
+          <p><strong>Start:</strong> {{ contest.start_time }} | <strong>End:</strong> {{ contest.end_time }}</p>
+          <a href="{% url 'contest_detail' contest.id %}" class="btn btn-primary btn-sm">View Leaderboard</a>
+        </div>
+      </div>
+    {% empty %}
+      <p>No contests yet.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

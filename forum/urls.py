@@ -33,7 +33,7 @@ urlpatterns = [
     path('resources/', views.resource_hub, name='resource_hub'),
     path('resources/add/', views.add_resource, name='add_resource'),
     path('resources/upvote/<int:resource_id>/', views.upvote_resource, name='upvote_resource'),
-   
+    path('contests/', include('contests.urls', namespace='contests')),  # ✅ Correct
 
 
     
